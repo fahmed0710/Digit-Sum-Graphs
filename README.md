@@ -1,28 +1,30 @@
-# 161-Individual-Project
+# Digit-Sum-Graphs
 
-Project Title: Digit Sums and Graphs
-In each diagram, fill in the circle with positive whole numbers in such a way that each circle’s number is the sum of the digits of all the numbers connected to it.
+## PART A: Project Basics
+**Full Name**: Fariha Ahmed
+**Project Title**: Digit Sum Graphs
+**Project Description**: The user is given a diagram of interconnected nodes. One node will have a number in it. The user must fill the other nodes with positive whole numbers in such a way that each node's number is the sum of the digits of all the numbers connected to it.
 
-Github Repository Link: https://github.com/fahmed0710/161-Individual-Project 
+## PART B: Github Link
+[Github Repository Link](https://github.com/fahmed0710/Digit-Sum-Graphs)
 
-Milestones with Deadlines:
-2/6 - 2/16: Learn Flask basics, set up Github repository, finalize technologies, finalize algorithms, finalize features and design
-2/16 - 2/21: Set up initial DBs and backend
-2/21 - 2/25: Design initial UI 
-2/25 -3/1: Login/registration, account management
-3/1 - 3/30: Implement game functionality and algorithm
-3/30 - 4/5: Design functionality for user to view data from previous games
-4/5 - 4/16: Testing
+## PART C: Milestones
+All milestones are moving parts and are subject to refinement.
 
-Initial Technology Stack:
--Frontend: HTML, CSS, JS, Node
--Backend: Flask
+**M1 (2/6 - 2/16)**: Finalize Design + Features
+**M2 (2/16 - 2/29)**: Database Setup + User and Admin Account Implementation
+**M3 (3/1 - 3/30)**: Game Implementation
+**M4 (3/30 - 4/10)**: Game Metrics Display for Users and Admin
+**M5 (4/11 - 4/16)**: Testing
 
-Algorithms/AI schemes used in the core engine:
-Generating answers algorithm: backtracking algorithm that adds up the digits connected to a node and determines if it’s correct, meant to find all possible answers
-Hint algorithm: user gets up to 3 hints, each time the user guesses incorrectly after the hint is given, the time until the user can access the next hint is increased
+## PART D: Technologies
+**Frontend**: HTML, CSS, JS, Node
+**Backend**: Flask, Python
 
-Market Space the application is related to and Product Selling Points:
-The game is geared towards people of all ages. Math-oriented people are more likely to consistently engage with the game.
-The game is simple in the sense that the directions are very straightforward, but still challenging enough for users to be engaged.
+## PART E: Algorithms
+**Generating answers**: A backtracking algoritm will be used to generate all the possible answers for a given node. For each connected node that hasn't been assigned a value yet, a positive whole number will be assigned to it. All possible assignments will be recursively explored and made sure that the sum equals the value of the node it's connected to. If a solution is found where all filled with valid numbers, it will be added to a list of possible solutions. Other possible assignments will be tried after backtracking, until all options are exhausted. 
 
+## PART F: Market Space & Selling Points
+The game is geared towards people of all ages of any kind. However, math-oriented people and puzzle-lovers are more likely to consistently engage with the game over time. 
+The game is simple enough in the sense that the directions are very straightforward and there's not much the user has to do, but still challenging enough for users to be engaged. There will be a few levels, so the game will not become redundant and users can progress onto more difficult problems if they want something more challenging.
+With this game, users can flex their problem solving and logic skills, as well as practicing their math skills through the constant additions needed to solve the problems.
