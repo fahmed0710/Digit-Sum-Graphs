@@ -2,7 +2,6 @@
 
 ## PART A: Project Basics
 **Full Name**: Fariha Ahmed
-
 **Project Title**: Digit Sum Graphs
 
 **Project Description**: The user is given a diagram of interconnected nodes. One node will have a number in it. The user must fill the other nodes with positive whole numbers in such a way that each node's number is the sum of the digits of all the numbers connected to it.
