@@ -33,7 +33,7 @@ All milestones are moving parts and are subject to refinement.
 
 
 ## PART E: Algorithms
-**Generating answers**: A backtracking algoritm will be used to generate all the possible answers for a given node. For each connected node that hasn't been assigned a value yet, a positive whole number will be assigned to it. All possible assignments will be recursively explored and made sure that the sum equals the value of the node it's connected to. If a solution is found where all filled with valid numbers, it will be added to a list of possible solutions. Other possible assignments will be tried after backtracking, until all options are exhausted. 
+**Generating answers**: A backtracking algorithm will be used to generate all the possible answers for a given node. For each connected node that hasn't been assigned a value yet, a positive whole number will be assigned to it. All possible assignments will be recursively explored and made sure that the sum equals the value of the node it's connected to. If a solution is found where all filled with valid numbers, it will be added to a list of possible solutions. Other possible assignments will be tried after backtracking, until all options are exhausted. 
 
 
 ## PART F: Market Space & Selling Points
