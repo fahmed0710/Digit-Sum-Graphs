@@ -1,5 +1,6 @@
 # Backend Setup Commands
 1. Navigate to backend from project root: *cd dev/backend*
+2. python3 -m venv venv
 3. Switch to the virtual environment: *source venv/bin/activate*
 4. Run the backend server: *python3 server.py*
 5. Visit the api pages via localhost:8080/api/home
