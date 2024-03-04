@@ -27,9 +27,9 @@ All milestones are moving parts and are subject to refinement.
 
 
 ## PART D: Technologies
-**Frontend**: HTML, CSS, JS, Node
+**Frontend**: Next.js, Tailwind
 
-**Backend**: Flask, Python
+**Backend**: Flask, Python, PostgreSQL, Docker
 
 
 ## PART E: Algorithms
