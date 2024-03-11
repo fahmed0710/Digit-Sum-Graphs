@@ -1,3 +1,5 @@
+"use client"
+
 export default async function LoginPage() {
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
@@ -8,10 +10,10 @@ export default async function LoginPage() {
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form className="space-y-6" action="#">
           <div>
-            <label className="block text-sm font-medium leading-6 text-gray-900">Email address</label>
+            <label className="block text-sm font-medium leading-6 text-gray-900">Username</label>
             <div className="mt-2">
-              <input id="email" name="email" type="email" autoComplete="email" placeholder="name@email.com" required
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></input>
+            <input id="username" name="username" type="username" autoComplete="username" placeholder="Username" required
+                className="block w-full rounded-md border-0 p-2.5 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></input>
             </div>
           </div>
 
@@ -19,7 +21,7 @@ export default async function LoginPage() {
             <label className="block text-sm font-medium leading-6 text-gray-900">Password</label>
             <div className="mt-2">
               <input id="password" name="password" type="password" placeholder="*******" required
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></input>
+                className="block w-full rounded-md border-0 p-2.5 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></input>
             </div>
           </div>
 
@@ -28,7 +30,7 @@ export default async function LoginPage() {
           </div>
         </form>
 
-        <p className="mt-10 text-center text-sm text-gray-500">
+        <p className="mt-5 text-center text-sm text-gray-500">
           Not a user? 
           <a href="/signup" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"> Create an account</a>
         </p>
