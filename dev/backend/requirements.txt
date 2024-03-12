@@ -1,4 +1,3 @@
-flask
-psycopg2-binary
-Flask-SQLAlchemy
+Flask
 Flask-CORS
+mysql-connector

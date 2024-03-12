@@ -1,31 +1,31 @@
+version: '3.8'
+
 services:
-  # flask service
   flaskapp:
     container_name: flaskapp
-    image: flaskapp:1.0.0
     build:
       context: ./backend
       dockerfile: flask.dockerfile
     ports:
       - 4000:4000
-    environment:
-      - FLASK_APP=app.py
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
     depends_on:
       - db
+    networks:
+      - backend-network
 
-# db service
   db:
     container_name: db
-    image: postgres:13
+    image: mysql:5.7
+    restart: unless-stopped
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
+      MYSQL_ROOT_PASSWORD: "root"
     ports:
-      - 5432:5432
+      - "32000:3306"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - ./backend/db:/docker-entrypoint-initdb.d
+    networks:
+      - backend-network
 
-volumes:
-  pgdata: {}
+networks:
+  backend-network:
+    driver: bridge
