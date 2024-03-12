@@ -17,11 +17,11 @@ All milestones are moving parts and are subject to refinement.
 
 **M1 (2/6 - 2/16)**: Finalize Design + Features
 
-**M2 (2/16 - 2/29)**: Database Setup + User and Admin Account Implementation
+**M2 (2/16 - 3/15)**: Database Setup + User and Admin Account Implementation
 
-**M3 (3/1 - 3/30)**: Game Implementation
+**M3 (3/15 - 4/5)**: Game Implementation
 
-**M4 (3/30 - 4/10)**: Game Metrics Display for Users and Admin
+**M4 (4/5 - 4/10)**: Game Metrics Display for Users and Admin
 
 **M5 (4/11 - 4/16)**: Testing
 
@@ -29,7 +29,7 @@ All milestones are moving parts and are subject to refinement.
 ## PART D: Technologies
 **Frontend**: Next.js, Tailwind
 
-**Backend**: Flask, Python, PostgreSQL, Docker
+**Backend**: Flask, Python, MySQL, Docker
 
 
 ## PART E: Algorithms
