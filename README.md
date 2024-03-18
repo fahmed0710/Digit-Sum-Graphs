@@ -5,6 +5,8 @@
 
 **Project Title**: Digit Sum Graphs
 
+**Course**: CS 161 Section 01
+
 **Project Description**: The user is given a diagram of interconnected nodes. One node will have a number in it. The user must fill the other nodes with positive whole numbers in such a way that each node's number is the sum of the digits of all the numbers connected to it.
 
 
