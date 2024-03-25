@@ -7,7 +7,7 @@ export async function login(username: string, password: string): Promise<{ succe
       password: password
     };
     
-    const response = await fetch("http://127.0.0.1:4000/api/users/login", {
+    const response = await fetch("http://127.0.0.1:4000/users/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -16,7 +16,6 @@ export async function login(username: string, password: string): Promise<{ succe
     });
 
     const result = await response.json();
-
     return result;
   } catch (error) {
     return { success: false, message: "Database Error: failed to login user" };
@@ -31,7 +30,7 @@ export async function signup(username: String, email: String, password: String):
       password: password
     }
 
-    const response = await fetch("http://127.0.0.1:4000/api/users/add_user", {
+    const response = await fetch("http://127.0.0.1:4000/users/add_user", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

@@ -21,7 +21,7 @@ def home():
         'message': 'Hello World'
     })
 
-@app.route('/api/users', methods=['GET'])
+@app.route('/users', methods=['GET'])
 def get_users():
     try:
       connection = mysql.connector.connect(**config)
@@ -30,11 +30,11 @@ def get_users():
       users = cursor.fetchall()
       cursor.close()
       connection.close()
-      return jsonify(users)
+      return jsonify({'success': True, 'message': 'Fetched all users successfully', 'users': users})
     except Exception as e:
       return jsonify({'error': str(e)})
 
-@app.route('/api/users/login', methods=['POST'])
+@app.route('/users/login', methods=['POST'])
 def login():
   try:
     connection = mysql.connector.connect(**config)
@@ -56,7 +56,7 @@ def login():
   except Exception as e:
     return jsonify({'success': False, 'error': str(e)})
 
-@app.route('/api/users/add_user', methods=['POST'])
+@app.route('/users/add_user', methods=['POST'])
 def add_user():
   try:
     connection = mysql.connector.connect(**config)
@@ -84,6 +84,31 @@ def add_user():
 
   except Exception as e:
     return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/users/delete/<int:user_id>', methods=['DELETE'])
+def delete_user(user_id):
+  try:
+    connection = mysql.connector.connect(**config)
+    cursor = connection.cursor(dictionary=True)
+
+    cursor.execute("SELECT * FROM Users WHERE user_id = %s", (user_id,))
+    user = cursor.fetchone()
+
+    if user:
+      cursor.execute("DELETE FROM Users WHERE user_id = %s", (user_id,))
+      connection.commit()
+      
+      cursor.close()
+      connection.close()
+
+      return jsonify({'success': True, 'message': f'User with ID {user_id} deleted successfully.'})
+    else:
+      cursor.close()
+      connection.close()
+
+      return jsonify({'success': False, 'message': f'User with ID {user_id} does not exist.'})
+  except Exception as e:
+    return jsonify({'error': str(e)})
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')
