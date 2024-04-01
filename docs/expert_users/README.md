@@ -19,6 +19,5 @@ Clone the project: *git clone https://github.com/fahmed0710/Digit-Sum-Graphs.git
 ## Frontend Setup Commands
 1. Navigate to frontend from project root: *cd dev/frontend*
 2. Install dependencies: *npm i*
-3. Prerender: npm run build
-4. Run the development server: *npm run start*
-5. Interact with the frontend via localhost:3000
+3. Run the development server: *npm run dev*
+4. Interact with the frontend via localhost:3000
