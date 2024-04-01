@@ -16,3 +16,5 @@ INSERT INTO Users(username, email, password_hash, user_points) VALUES
 
 INSERT INTO Users(username, email, password_hash, user_points) VALUES
 	("dondraper", "ddraper@gmail.com", "password", 0);
+
+
