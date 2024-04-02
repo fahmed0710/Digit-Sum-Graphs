@@ -14,7 +14,9 @@ Clone the project: *git clone https://github.com/fahmed0710/Digit-Sum-Graphs.git
    
    o Test route: localhost:4000/test
    
-   o User API route: localhost:4000/api/users
+   o User API route: localhost:4000/users
+
+   o Puzzles API route: localhost:4000/puzzles
 
 ## Frontend Setup Commands
 1. Navigate to frontend from project root: *cd dev/frontend*
