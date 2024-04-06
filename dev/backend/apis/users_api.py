@@ -5,14 +5,14 @@ import bcrypt
 @app.route('/users', methods=['GET'])
 def get_users():
   try:
-    users = execute_query("SELECT * FROM Users", fetchone=False, fetchall=True)
+    users = execute_query("SELECT * FROM Users", fetchall=True)
       
     if users is not None:
       return jsonify({'success': True, 'message': 'Fetched all users successfully', 'users': users})
     else:
       return jsonify({'success': False, 'message': 'Failed to fetch users'})
   except Exception as e:
-    return jsonify({'success': False, 'error': str(e)})
+    return jsonify({'success': False, 'message': str(e)})
 
 @app.route('/users/login', methods=['POST'])
 def login():
@@ -21,16 +21,16 @@ def login():
     username = data.get('username')
     password = data.get('password')
 
-    user = execute_query("SELECT * FROM Users WHERE username = %s", (username,))
+    user = execute_query("SELECT * FROM Users WHERE username = %s", (username,), fetchone=True)
     
     if user and bcrypt.checkpw(password.encode('utf-8'), user['password_hash'].encode('utf-8')):
       return jsonify({'success': True, 'message': 'Login successful'})
     else:
       return jsonify({'success': False, 'message': 'Invalid username or password.' })
   except Exception as e:
-    return jsonify({'success': False, 'error': str(e)})
+    return jsonify({'success': False, 'message': str(e)})
 
-@app.route('/users/add_user', methods=['POST'])
+@app.route('/users/add', methods=['POST'])
 def add_user():
   try:
     data = request.get_json()
@@ -38,9 +38,9 @@ def add_user():
     email = data.get('email')
     password = data.get('password')
 
-    existing_user = execute_query("SELECT * FROM Users WHERE username = %s OR email = %s", (username, email))
-    if existing_user:
-      return jsonify({'success': False, 'message': 'Account with the provided username or email already exists.'})
+    existing_users  = execute_query("SELECT * FROM Users WHERE username = %s OR email = %s", (username, email), fetchall=True)
+    if existing_users:
+      return jsonify({'success': False, 'message': 'Account(s) with the provided username or email already exists.'})
 
     password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
@@ -48,7 +48,7 @@ def add_user():
 
     return jsonify({'success': True, 'message': 'User added successfully.'})
   except Exception as e:
-    return jsonify({'success': False, 'error': str(e)})
+    return jsonify({'success': False, 'message': str(e)})
 
 @app.route('/users/delete/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
@@ -62,4 +62,4 @@ def delete_user(user_id):
     else:
       return jsonify({'success': False, 'message': f'User with ID {user_id} does not exist.'})
   except Exception as e:
-    return jsonify({'error': str(e)})
+    return jsonify({'success': False, 'message': str(e)})

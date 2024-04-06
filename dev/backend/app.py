@@ -14,7 +14,7 @@ config={
   'database': "digit_sum_graphs"
 }
 
-def execute_query(query, params=None, fetch=True, fetchone=True, fetchall=False):
+def execute_query(query, params=None, fetch=True, fetchone=False, fetchall=False):
   try:
     connection = mysql.connector.connect(**config)
     cursor = connection.cursor(dictionary=True)
@@ -34,9 +34,8 @@ def execute_query(query, params=None, fetch=True, fetchone=True, fetchall=False)
     connection.close()
 
     return result
-
   except Exception as e:
-    return None
+    return jsonify({'success': False, 'err': str(e)})
 
 
 @app.route('/')
@@ -45,7 +44,7 @@ def home():
         'message': 'Hi hi hiii'
     })
 
-from apis import users_api
+from apis import users_api, puzzles_api
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')

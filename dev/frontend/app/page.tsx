@@ -1,5 +1,5 @@
 export default function Home() {
   return(
-    <div>In progress!</div>
+    <div>In progress! Hihi</div>
   )
 }
