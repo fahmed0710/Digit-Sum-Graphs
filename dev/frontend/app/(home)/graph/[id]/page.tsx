@@ -3,7 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { GraphNode } from "@/app/components/GraphNode"
 import { getPuzzle } from '@/app/actions/puzzle';
 
-export default function Puzzle() {
+export default function Graph({ params }: { params: { id: number } }) {
+  const id = Number(params.id);
+  
   const [puzzleStr, setPuzzleStr] = useState("");
   const [puzzleStrLayers, setPuzzleStrLayers] = useState<string[]>([]);
   const [puzzleStrWidth, setPuzzleStrWidth] = useState(0);
@@ -11,7 +13,7 @@ export default function Puzzle() {
   useEffect(() => {
     async function fetchPuzzle() {
       try {
-        const result = await getPuzzle(1);
+        const result = await getPuzzle(id);
         if(result?.success) {
           setPuzzleStr(result.result['str_representation']);
         } else {
@@ -44,7 +46,7 @@ export default function Puzzle() {
       
       <h1 className="font-geoeves text-7xl text-center" style={{ wordSpacing: '-7px' }}>Digit Sum Graphs</h1>
       
-      <h2 className="text-md text-center py-2">Graph 1</h2>
+      <h2 className="text-md text-center py-2">Graph {id}</h2>
       
       <div className={`mx-auto p-8 md:w-4/5 lg:w-2/5 aspect-square rounded-xl border border-solid border-black flex justify-center items-center ${puzzleStrWidth > 5 ? 'overflow-x-auto' : ''}`}>
         <div className={`grid grid-cols-${puzzleStrWidth}`}>
