@@ -11,7 +11,7 @@ export default function GraphMenu() {
         const result = await getPuzzleIDs();
 
         if(result?.success) {
-          setPuzzleIds(result?.ids as number[]);
+          setPuzzleIds(result?.result as number[]);
           console.log(result?.message);
         } else {
           console.log(result?.message);

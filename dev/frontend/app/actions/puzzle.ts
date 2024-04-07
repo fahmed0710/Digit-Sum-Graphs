@@ -2,6 +2,7 @@
 
 interface Puzzle {
   puzzle_id: number;
+  number_of_nodes: number;
   str_representation: string;
 }
 
@@ -26,11 +27,11 @@ export async function getPuzzleIDs() {
     const result = await getPuzzles();
     
     if(result.success) {
-      const puzzles: Puzzle[] = result.puzzles;
+      const puzzles: Puzzle[] = result.result;
 
       const puzzleIds: number[] = puzzles.map((puzzle) => puzzle.puzzle_id);
     
-      return { success: true, message: "Puzzle IDs retrieved successfully.", ids: puzzleIds };
+      return { success: true, message: "Puzzle IDs retrieved successfully.", result: puzzleIds };
     } else {
       return { success: true, message: "Puzzle IDs failed to be retrieved."};
     }
@@ -52,28 +53,5 @@ export async function getPuzzle(id: Number) {
     return result;
   } catch (error: any) {
     return { success: false, message: error.message as string };
-  }
-}
-
-export async function validateSolution(username: string, password: string): Promise<{ success: boolean, message: string }> {
-  try {
-    // const credentials = {
-    //   username: username,
-    //   password: password
-    // };
-    
-    // const response = await fetch("http://127.0.0.1:4000/users/login", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json"
-    //   },
-    //   body: JSON.stringify(credentials)
-    // });
-
-    // const result = await response.json();
-    // return result;
-    return { success: true, message: "In progress!"};
-  } catch (error) {
-    return { success: false, message: "Database Error: failed to login user" };
   }
 }

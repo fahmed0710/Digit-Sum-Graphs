@@ -72,7 +72,7 @@ def get_puzzles():
     puzzles = execute_query("SELECT * FROM GraphPuzzles", fetchall=True)
       
     if puzzles:
-      return jsonify({'success': True, 'message': 'Fetched all puzzles successfully.', 'puzzles': puzzles})
+      return jsonify({'success': True, 'message': 'Fetched all puzzles successfully.', 'result': puzzles})
     else:
       return jsonify({'success': False, 'message': 'Failed to fetch puzzles.'})
   except Exception as e:

@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 
-export function GraphNode({ size, initialNode, value, setValue }: { size: String, initialNode: Boolean, value: Number, setValue: Function }) {
+export function GraphNode({ size, setValue, initialNode, initialValue }: { size: String, setValue: Function, initialNode: Boolean, initialValue?: Number }) {
+  const [inputField, setInputField] = useState("");
   const [error, setError] = useState(false); 
   
   const handleInputChange = (e: React.FormEvent<HTMLInputElement>) => {
     const input = e.currentTarget.value;
-    console.log(input)
 
     if(/^[1-9]\d?$/.test(input)) {
+      setInputField(input);
       setValue(input);
       setError(false)
     } else {
@@ -19,9 +20,10 @@ export function GraphNode({ size, initialNode, value, setValue }: { size: String
     <div className={`w-${size} h-${size} box-border rounded-full bg-gray-200 flex flex-col justify-center items-center overflow-hidden`}>
         {
           initialNode 
-          ? <p>{ value.toString() }</p> 
+          ? <p>lol</p> 
           : <input 
-              type="number" 
+              type="text" 
+              value={ inputField }
               onChange={ handleInputChange }
               className="w-3/4 border border-gray-300 rounded-md text-center text-lg"
             />
