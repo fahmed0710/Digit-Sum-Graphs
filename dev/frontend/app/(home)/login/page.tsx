@@ -1,21 +1,36 @@
 "use client"
-import { useState } from "react";
-import { login } from "@/app/actions/auth";
+import { useState, useEffect } from "react";
+import { useRouter } from 'next/navigation';
+import { getSession, login } from "@/app/actions/auth";
 
 export default function LoginPage() {
+  const router = useRouter();
+  
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginSuccess, setLoginSuccess] = useState(true);
   
+  useEffect(() => {
+    async function checkSession() {
+      const session = await getSession();
+      if(session) {
+        router.push("/dashboard");
+      }
+    }
+
+    checkSession();
+  }, [])
+
+
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const result = await login(username, password);
-    if(result?.success) {
+    if(result.success) {
       setLoginSuccess(true);
-      console.log("Success", result.message);
+      console.log("Login success.");
+      router.push("/dashboard");
     } else {
       setLoginSuccess(false);
-      console.log("Fail", result?.message);
     }
   };
 

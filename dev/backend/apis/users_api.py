@@ -12,7 +12,7 @@ def get_users():
     else:
       return jsonify({'success': False, 'message': 'Failed to fetch users'})
   except Exception as e:
-    return jsonify({'success': False, 'message': str(e)})
+    return jsonify({'success': False, 'message': f'Error: {str(e)}'})
 
 @app.route('/users/login', methods=['POST'])
 def login():
@@ -24,11 +24,11 @@ def login():
     user = execute_query("SELECT * FROM Users WHERE username = %s", (username,), fetchone=True)
     
     if user and bcrypt.checkpw(password.encode('utf-8'), user['password_hash'].encode('utf-8')):
-      return jsonify({'success': True, 'message': 'Login successful'})
+      return jsonify({'success': True, 'message': 'Login successful', 'result': user})
     else:
       return jsonify({'success': False, 'message': 'Invalid username or password.' })
   except Exception as e:
-    return jsonify({'success': False, 'message': str(e)})
+    return jsonify({'success': False, 'message': f'Error: {str(e)}'})
 
 @app.route('/users/add', methods=['POST'])
 def add_user():
@@ -48,7 +48,7 @@ def add_user():
 
     return jsonify({'success': True, 'message': 'User added successfully.'})
   except Exception as e:
-    return jsonify({'success': False, 'message': str(e)})
+    return jsonify({'success': False, 'message': f'Error: {str(e)}'})
 
 @app.route('/users/delete/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
@@ -62,4 +62,4 @@ def delete_user(user_id):
     else:
       return jsonify({'success': False, 'message': f'User with ID {user_id} does not exist.'})
   except Exception as e:
-    return jsonify({'success': False, 'message': str(e)})
+    return jsonify({'success': False, 'message': f'Error: {str(e)}'})
