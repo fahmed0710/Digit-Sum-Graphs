@@ -11,7 +11,8 @@ CREATE TABLE Users(
 CREATE TABLE GraphPuzzles(
 	puzzle_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   number_of_nodes int NOT NULL,
-  initial_node_idx int NOT NULL, 
-  initial_node_val int NOT NULL,
-  str_representation VARCHAR(255) NOT NULL
+  initial_node int NOT NULL, 
+  initial_val int NOT NULL,
+  str_representation VARCHAR(255) NOT NULL,
+  connections JSON
 );

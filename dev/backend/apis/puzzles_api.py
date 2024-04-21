@@ -1,5 +1,6 @@
 from flask import jsonify, request
 from app import app, execute_query
+import json
 
 def numToDigits(num):
   return [int(digit) for digit in str(num)]
@@ -15,56 +16,59 @@ class Node:
   def addConnection(self, node):
     self.connections.append(node)
 
-
 class Graph:
   def __init__(self):
     self.initial = None
+    self.nodes = []
 
   def setInitial(self, node):
+    if node not in self.nodes:
+      self.nodes.append(node)
     self.initial = node
 
+  def addNode(self, node):
+    self.nodes.append(node)
+
+  def getNodeIdx(self, node):
+    for idx, n in enumerate(self.nodes):
+      if n == node:
+        return idx
+
+  def setGraph(self, node_set, connections_set, init_node):
+    for idx, node_val in enumerate(node_set):
+      node = Node(node_val)
+      self.addNode(node)
+
+      if(idx == (init_node - 1)):
+        self.setInitial(node)
+
+    for idx, node in enumerate(self.nodes):
+      connections = connections_set[idx]
+      for c in connections:
+        connection = self.nodes[c - 1]
+        node.addConnection(connection)
+    
+
   def isSolutionValid(self):
-    visited = set()  # To keep track of visited nodes
+    visited = set()  
+    invalid_nodes = []
 
     def dfs(node):
       if node not in visited:
-        print(str(node.val))
         visited.add(node)
         digit_sum = 0
         
-        for neighbor in node.connections:
-          digit_sum += sum(numToDigits(neighbor.val))
+        for connection in node.connections:
+          digit_sum += sum(numToDigits(connection.val))
+          dfs(connection)
 
-        print("Digit sum: %s; Actual value: %s" % (digit_sum, node.val))
         if digit_sum != node.val:
-          print("%s is an invalid node." % (node))
-        
-        for neighbor in node.connections:
-          dfs(neighbor)
+          invalid_nodes.append(self.getNodeIdx(node))
 
     if self.initial:
-      print("Graph:")
       dfs(self.initial)
-    else:
-      print("Empty graph")
-          
-  def printGraph(self):
-    visited = set()  # To keep track of visited nodes
 
-    def dfs(node):
-      if node not in visited:
-        print(str(node.val))
-        visited.add(node)
-        for neighbor in node.connections:
-          print("Connection: ", neighbor.val)
-        for neighbor in node.connections:
-          dfs(neighbor)
-
-    if self.initial:
-      print("Graph:")
-      dfs(self.initial)
-    else:
-      print("Empty graph")
+    return invalid_nodes
 
 @app.route('/puzzles', methods=['GET'])
 def get_puzzles():
@@ -76,7 +80,7 @@ def get_puzzles():
     else:
       return jsonify({'success': False, 'message': 'Failed to fetch puzzles.'})
   except Exception as e:
-    return jsonify({'success': False, 'message': str(e)})
+    return jsonify({'success': False, 'message': f'Error: {str(e)}'})
 
 @app.route('/puzzles/add', methods=['POST'])
 def add_puzzle():
@@ -88,7 +92,7 @@ def add_puzzle():
 
     return jsonify({'success': True, 'message': 'Puzzle added successfully.'})
   except Exception as e:
-    return jsonify({'success': False, 'message': str(e)})
+    return jsonify({'success': False, 'message': f'Error: {str(e)}'})
 
 @app.route('/puzzles/get/<int:puzzle_id>', methods=['GET'])
 def get_puzzle(puzzle_id):
@@ -100,7 +104,7 @@ def get_puzzle(puzzle_id):
     else:
       return jsonify({'success': False, 'message': f'Puzzle with ID {puzzle_id} does not exist.'})
   except Exception as e:
-    return jsonify({'error': str(e)})
+    return jsonify({'success': False, 'message': f'Error: {str(e)}'})
 
 @app.route('/puzzles/delete/<int:puzzle_id>', methods=['DELETE'])
 def delete_puzzle(puzzle_id):
@@ -114,4 +118,26 @@ def delete_puzzle(puzzle_id):
     else:
       return jsonify({'success': False, 'message': f'Puzzle with ID {puzzle_id} does not exist.'})
   except Exception as e:
-    return jsonify({'error': str(e)})
+    return jsonify({'success': False, 'message': f'Error: {str(e)}'})
+
+@app.route('/puzzles/check/solution/<int:puzzle_id>', methods=['POST'])
+def validate_solution(puzzle_id):
+  try:
+    data = request.get_json()
+    solution_set = data.get('solution_set')
+
+    puzzle = execute_query("SELECT * FROM GraphPuzzles WHERE puzzle_id = %s", (puzzle_id,), fetchone=True)
+    initial_node = int(puzzle['initial_node'])
+    connections = json.loads(puzzle['connections'])
+
+    graph = Graph()
+    
+    graph.setGraph(solution_set, connections, initial_node)
+    result = graph.isSolutionValid()
+    
+    if result == []:
+      return jsonify({'success': True, 'message': 'Solution is valid.', 'result': result})
+    else:
+      return jsonify({'success': False, 'message': 'Solution is not valid.', 'result': result })
+  except Exception as e:
+    return jsonify({'success': False, 'message': f'Error: {str(e)}'})

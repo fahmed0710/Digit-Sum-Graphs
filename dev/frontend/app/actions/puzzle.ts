@@ -55,3 +55,24 @@ export async function getPuzzle(id: Number) {
     return { success: false, message: error.message as string };
   }
 }
+
+export async function checkSolution(id: Number, solution_set: Number[]) {
+  try {
+    const body = {
+      solution_set: solution_set
+    }
+    
+    const response = await fetch(`http://127.0.0.1:4000/puzzles/check/solution/${id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      }, 
+      body: JSON.stringify(body)
+    });
+
+    const result = await response.json();
+    return result;
+  } catch (error: any) {
+    return { success: false, message: error.message as string };
+  }
+}

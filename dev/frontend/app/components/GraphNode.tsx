@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 
-export function GraphNode({ size, setValue, initialNode, initialValue }: { size: String, setValue: Function, initialNode: Boolean, initialValue?: Number }) {
+export function GraphNode({ size, setValue, initialNode, initialValue }: { size: String, setValue: Function, initialNode?: Boolean, initialValue?: Number }) {
   const [inputField, setInputField] = useState("");
   const [error, setError] = useState(false); 
   
   const handleInputChange = (e: React.FormEvent<HTMLInputElement>) => {
     const input = e.currentTarget.value;
+    setValue(Number(input));
+    setInputField(input);
 
     if(/^[1-9]\d?$/.test(input)) {
-      setInputField(input);
-      setValue(input);
       setError(false)
     } else {
       setError(true);
@@ -20,7 +20,7 @@ export function GraphNode({ size, setValue, initialNode, initialValue }: { size:
     <div className={`w-${size} h-${size} box-border rounded-full bg-gray-200 flex flex-col justify-center items-center overflow-hidden`}>
         {
           initialNode 
-          ? <p>lol</p> 
+          ? <p>{initialValue?.toString()}</p> 
           : <input 
               type="text" 
               value={ inputField }
@@ -30,7 +30,7 @@ export function GraphNode({ size, setValue, initialNode, initialValue }: { size:
         }
         {error && 
           <div>
-            <p className="text-xs text-center">Input must be a positive integer from 1 - 99!</p>
+            <p className="mt-1 text-xs text-center text-red-500">Input must be a positive integer from 1 - 99!</p>
           </div>
         }
       </div>
