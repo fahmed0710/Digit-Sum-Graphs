@@ -1,6 +1,5 @@
 "use client"
 import React, { useState, useEffect } from 'react';
-import { NavigationMenu } from '@/app/components/NavigationMenu';
 import { GraphNode } from "@/app/components/GraphNode"
 import { getPuzzle, checkSolution } from '@/app/actions/puzzle';
 
@@ -113,7 +112,7 @@ export default function Graph({ params }: { params: { id: number } }) {
 
   return (
     <div className="container mx-auto px-6 py-6 flex-col justify-center items-center overflow-auto">
-      <NavigationMenu />
+      
       <h1 className="font-geoeves text-7xl text-center" style={{ wordSpacing: '-7px' }}>Digit Sum Graphs</h1>
       
       <h2 className="mx-auto p-4 md:w-4/5 lg:w-2/5 text-md text-center">Given one node with a number in it, fill in the other nodes with positive whole numbers in such a way that each node's number is the sum of the digits of all the numbers connected to it.</h2>
@@ -178,7 +177,7 @@ export default function Graph({ params }: { params: { id: number } }) {
       </dialog>
 
       <dialog id="correctSolution" className="modal">
-        <div className="modal-box border border-solid border-yellow-500 flex">
+        <div className="modal-box border border-solid border-green-500 flex">
           <form method="dialog" className="modal-action">
             <button className="absolute top-2 right-4">x</button>
           </form>

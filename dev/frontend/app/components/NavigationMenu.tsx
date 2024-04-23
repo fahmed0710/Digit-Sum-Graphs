@@ -56,7 +56,7 @@ export function NavigationMenu() {
       setLoggedIn(true);
       setLoginLoad(true);
       setLoginSuccess(true);
-      router.push("/dashboard");
+      //router.push("/dashboard");
     } else {
       setLoggedIn(false);
       setLoginLoad(false);
@@ -101,7 +101,7 @@ export function NavigationMenu() {
   const handleLogout = async() => {
     await logout();
     setLoggedIn(false);
-    router.push("/");
+    //router.push("/");
   }
 
   return (
@@ -110,7 +110,7 @@ export function NavigationMenu() {
         <div className="dropdown dropdown-end">
           <div tabIndex={0} role="button" className="btn btn-ghost">Menu</div>
           <ul tabIndex={0} className="menu dropdown-content text-end z-[1] p-2 shadow bg-base-100 rounded-box w-min">
-            <li>{loggedIn ? <a onClick={() => router.push("/dashboard")}>Dashboard</a> : <a onClick={() => {handleClick("account"); setAccountAction("login")}}>Log in</a>}</li>
+            <li>{loggedIn ? <a onClick={() => router.push("/dashboard")}>Dashboard</a> : <a onClick={() => {handleClick("account"); setAccountAction("login")}}>Login</a>}</li>
             <li><a onClick={() => router.push("/graph/1")}>Game</a></li>
             {loggedIn && <li><a onClick={ handleLogout }>Log out</a></li>}
           </ul>
@@ -177,7 +177,7 @@ export function NavigationMenu() {
                 <p className="py-2 text-center text-lg font-bold">Create Account</p>
 
                 <form className="mx-auto w-4/6 h-full space-y-4 flex flex-col items-center" onSubmit={handleSignup}>
-                  {!signupSuccess && 
+                  {!signupSuccess &&
                     <div className="w-5/6 p-2 flex justify-center items-center rounded-md bg-red-200">
                       <p className="text-sm text-center">{error}</p>
                     </div>
