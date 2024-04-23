@@ -109,9 +109,9 @@ export function NavigationMenu() {
       <div className="px-2 flex flex-1 justify-end">
         <div className="dropdown dropdown-end">
           <div tabIndex={0} role="button" className="btn btn-ghost">Menu</div>
-          <ul tabIndex={0} className="menu dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+          <ul tabIndex={0} className="menu dropdown-content text-end z-[1] p-2 shadow bg-base-100 rounded-box w-min">
             <li>{loggedIn ? <a onClick={() => router.push("/dashboard")}>Dashboard</a> : <a onClick={() => {handleClick("account"); setAccountAction("login")}}>Log in</a>}</li>
-            <li><a onClick={() => router.push("/graph")}>Game</a></li>
+            <li><a onClick={() => router.push("/graph/1")}>Game</a></li>
             {loggedIn && <li><a onClick={ handleLogout }>Log out</a></li>}
           </ul>
         </div>
