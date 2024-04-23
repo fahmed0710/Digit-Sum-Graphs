@@ -1,5 +1,10 @@
+import { NavigationMenu } from "./components/NavigationMenu"
+
 export default function Home() {
   return(
-    <div>In progress! Hihi</div>
+    <div>
+      <NavigationMenu />
+      <div>In progress! Hihi</div>
+    </div> 
   )
 }
