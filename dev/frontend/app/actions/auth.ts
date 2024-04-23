@@ -1,15 +1,16 @@
 "use server"
 import { cookies } from "next/headers";
+import { NextRequest, NextResponse } from "next/server";
 import { SignJWT, jwtVerify } from 'jose';
 
-const secretKey = 'secret';
+const secretKey = "secret";
 const key = new TextEncoder().encode(secretKey);
 
 export async function encrypt(payload: any) {
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime("10 sec from now")
+    .setExpirationTime("1h")
     .sign(key);
 }
 
@@ -36,10 +37,11 @@ export async function login(username: string, password: string) {
     });
 
     const result = await response.json();
-
     const userId = result.result['user_id'];
+    const name = result.result['username'];
+    
     const expires = new Date(Date.now() + 3600000);
-    const session = await encrypt({ userId, expires });
+    const session = await encrypt({ name, userId, expires });
     cookies().set('session', session, {expires, httpOnly: true });
 
     return result;
@@ -49,23 +51,30 @@ export async function login(username: string, password: string) {
 }
 
 export async function logout() {
-  cookies().set('session', '', { expires: new Date(0) });
+  cookies().set("session", "", { expires: new Date(0) });
 }
 
 export async function getSession() {
-  const session = cookies().get('session')?.value;
+  const session = cookies().get("session")?.value;
   if (!session) return null;
+  return await decrypt(session);
+}
 
-  try {
-    const payload = await decrypt(session);
-    const expirationTime = new Date(payload.exp * 1000);
-    if (expirationTime < new Date()) {
-      return null;
-    }
-    return payload;
-  } catch (error) {
-    return null;    
-  }
+export async function updateSession(request: NextRequest) {
+  const session = request.cookies.get("session")?.value;
+  if (!session) return;
+
+  // Refresh the session so it doesn't expire
+  const parsed = await decrypt(session);
+  parsed.expires = new Date(Date.now() + 3600 * 1000);
+  const res = NextResponse.next();
+  res.cookies.set({
+    name: "session",
+    value: await encrypt(parsed),
+    httpOnly: true,
+    expires: parsed.expires,
+  });
+  return res;
 }
 
 export async function signup(username: String, email: String, password: String): Promise<{ success: boolean, message: string }> {

@@ -1,5 +1,6 @@
 "use client"
 import React, { useState, useEffect } from 'react';
+import { NavigationMenu } from '@/app/components/NavigationMenu';
 import { getPuzzleIDs } from '@/app/actions/puzzle';
 
 export default function GraphMenu() {
@@ -26,6 +27,7 @@ export default function GraphMenu() {
 
   return (
     <div className="container mx-auto px-6 py-20 flex-col justify-center items-center overflow-auto">
+      <NavigationMenu />
       <h1 className="font-geoeves text-7xl text-center" style={{ wordSpacing: '-7px' }}>Digit Sum Graphs</h1>
       <p className="text-center">Click on a link to access a graph puzzle!</p>
       

@@ -1,7 +1,7 @@
 "use client"
 import { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
-import { getSession, login, signup } from "@/app/actions/auth";
+import { getSession, login, signup, logout } from "@/app/actions/auth";
 
 export function NavigationMenu() {
   const router = useRouter();
@@ -13,6 +13,7 @@ export function NavigationMenu() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginSuccess, setLoginSuccess] = useState(true);
+  const [loginLoad, setLoginLoad] = useState(false);
 
   const [email, setEmail] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -22,17 +23,18 @@ export function NavigationMenu() {
 
   useEffect(() => {
     async function checkSession() {
-      const session = await getSession();
-      if(session) {
+      const retrievedSession = await getSession();
+      if(retrievedSession) {
         setLoggedIn(true);
+        setSession(retrievedSession)
       } else {
         setLoggedIn(false);
+        setSession(null);
       }
-      setSession(session);
-;    }
+    }
 
     checkSession();
-  }, [])
+  }, []);
 
   function handleClick(route: string) {
     const modal = document.getElementById(route);
@@ -51,9 +53,13 @@ export function NavigationMenu() {
     const result = await login(username, password);
     
     if(result.success) {
+      setLoggedIn(true);
+      setLoginLoad(true);
       setLoginSuccess(true);
       router.push("/dashboard");
     } else {
+      setLoggedIn(false);
+      setLoginLoad(false);
       setLoginSuccess(false);
       setError("Login unsuccessful! Invalid username or password.");
     }
@@ -75,7 +81,7 @@ export function NavigationMenu() {
       setError("Passwords don't match.");
       return;
     } 
-    
+
     const result = await signup(username, email, password);
     
     if(result?.success) {
@@ -84,7 +90,6 @@ export function NavigationMenu() {
       const result = await login(username, password);
     
       if(result.success) {
-        //setLoginSuccess(true);
         router.push("/dashboard");
       } 
     } else {
@@ -93,17 +98,21 @@ export function NavigationMenu() {
     }
   };
 
+  const handleLogout = async() => {
+    await logout();
+    setLoggedIn(false);
+    router.push("/");
+  }
+
   return (
     <div className="navbar">
-      
-      
       <div className="px-2 flex flex-1 justify-end">
         <div className="dropdown dropdown-end">
-          <div tabIndex={0} role="button" className="btn btn-ghost rounded-btn">Menu</div>
+          <div tabIndex={0} role="button" className="btn btn-ghost">Menu</div>
           <ul tabIndex={0} className="menu dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-            <li>{loggedIn ? <a>Dashboard</a> : <a onClick={() => {handleClick("account"); setAccountAction("login")}}>Log in</a>}</li>
-            <li><a>Game</a></li>
-            {loggedIn && <li><a>Log out</a></li>}
+            <li>{loggedIn ? <a onClick={() => router.push("/dashboard")}>Dashboard</a> : <a onClick={() => {handleClick("account"); setAccountAction("login")}}>Log in</a>}</li>
+            <li><a onClick={() => router.push("/graph")}>Game</a></li>
+            {loggedIn && <li><a onClick={ handleLogout }>Log out</a></li>}
           </ul>
         </div>
       </div>
@@ -152,7 +161,10 @@ export function NavigationMenu() {
                     </label>
                   </div>
 
-                  <button type="submit" className="w-5/6 py-2 rounded bg-pink-500 hover:bg-pink-400 text-white">Log In</button>
+                  <button type="submit" className="w-5/6 py-2 flex justify-center items-center rounded bg-pink-500 hover:bg-pink-400 text-white">
+                    {/* {loginLoad && <span className="loading loading-spinner"></span>} */}
+                    Log In
+                  </button>
                 </form>
                 
                 <p className="mt-5 text-sm text-center text-gray-500">
