@@ -12,12 +12,12 @@ export function NavigationMenu() {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [loginSuccess, setLoginSuccess] = useState(true);
+  const [loginSuccess, setLoginSuccess] = useState<boolean | null>(null);
   const [loginLoad, setLoginLoad] = useState(false);
 
   const [email, setEmail] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [signupSuccess, setSignupSuccess] = useState(true);
+  const [signupSuccess, setSignupSuccess] = useState<boolean | null>(null);
 
   const [error, setError] = useState("");
 
@@ -56,7 +56,13 @@ export function NavigationMenu() {
       setLoggedIn(true);
       setLoginLoad(true);
       setLoginSuccess(true);
-      //router.push("/dashboard");
+      
+      setTimeout(() => {
+        const modal = document.getElementById("account");
+        if (modal instanceof HTMLDialogElement) {
+          modal.close();
+        }
+      }, 1500);
     } else {
       setLoggedIn(false);
       setLoginLoad(false);
@@ -82,16 +88,26 @@ export function NavigationMenu() {
       return;
     } 
 
-    const result = await signup(username, email, password);
+    const result = await signup("user", username, email, password);
     
     if(result?.success) {
       setSignupSuccess(true);
-      
+
       const result = await login(username, password);
     
       if(result.success) {
-        router.push("/dashboard");
-      } 
+        setLoggedIn(true);
+        setLoginSuccess(true);
+        
+        setTimeout(() => {
+          const modal = document.getElementById("account");
+          if (modal instanceof HTMLDialogElement) {
+            modal.close();
+          }
+        }, 1500);
+      } else {
+        console.log(result.message);
+      }
     } else {
       setSignupSuccess(false);
       setError("Signup unsuccessful! Account with provided username/email already exists.")
@@ -100,18 +116,25 @@ export function NavigationMenu() {
 
   const handleLogout = async() => {
     await logout();
+    setLoginSuccess(null);
+    setSignupSuccess(null);
     setLoggedIn(false);
-    //router.push("/");
+  }
+
+  const handleCloseModal = () => {
+    setLoginSuccess(null);
+    setSignupSuccess(null);
   }
 
   return (
     <div className="navbar">
-      <div className="px-2 flex flex-1 justify-end">
+      <div className="absolute top-4 right-4 px-2 flex flex-1 justify-end">
         <div className="dropdown dropdown-end">
           <div tabIndex={0} role="button" className="btn btn-ghost">Menu</div>
           <ul tabIndex={0} className="menu dropdown-content text-end z-[1] p-2 shadow bg-base-100 rounded-box w-min">
+            <li><a onClick={() => router.push("/")}>Home</a></li>
             <li>{loggedIn ? <a onClick={() => router.push("/dashboard")}>Dashboard</a> : <a onClick={() => {handleClick("account"); setAccountAction("login")}}>Login</a>}</li>
-            <li><a onClick={() => router.push("/graph/1")}>Game</a></li>
+            <li><a onClick={() => router.push("/graph")}>Game</a></li>
             {loggedIn && <li><a onClick={ handleLogout }>Log out</a></li>}
           </ul>
         </div>
@@ -120,7 +143,7 @@ export function NavigationMenu() {
       <dialog id="account" className="modal w-xs h-full">
         <div className="modal-box border border-solid flex-col">
           <form method="dialog" className="modal-action">
-            <button className="absolute top-4 right-4">
+            <button onClick={handleCloseModal} className="absolute top-4 right-4">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
@@ -133,10 +156,17 @@ export function NavigationMenu() {
                 <p className="py-2 text-center text-lg font-bold">Log In</p>
 
                 <form className="mx-auto w-4/6 h-full space-y-4 flex flex-col items-center" onSubmit={handleLogin}>
-                  {!loginSuccess && 
+                  {loginSuccess !== null && loginSuccess
+                   ?
+                    <div className="w-5/6 p-2 flex justify-center items-center rounded-md bg-green-100">
+                      <p className="text-sm text-center">Login success!</p>
+                    </div>
+                   : loginSuccess !== null && !loginSuccess
+                   ?
                     <div className="w-5/6 p-2 flex justify-center items-center rounded-md bg-red-200">
                       <p className="text-sm text-center">{error}</p>
                     </div>
+                    : <div className="bg-white"></div>
                   }
                   
                   <div>
@@ -177,10 +207,17 @@ export function NavigationMenu() {
                 <p className="py-2 text-center text-lg font-bold">Create Account</p>
 
                 <form className="mx-auto w-4/6 h-full space-y-4 flex flex-col items-center" onSubmit={handleSignup}>
-                  {!signupSuccess &&
+                  {signupSuccess !== null && signupSuccess
+                   ?
+                    <div className="w-5/6 p-2 flex justify-center items-center rounded-md bg-green-100">
+                      <p className="text-sm text-center">Account created successfully!</p>
+                    </div>
+                   : signupSuccess !== null && !signupSuccess
+                   ?
                     <div className="w-5/6 p-2 flex justify-center items-center rounded-md bg-red-200">
                       <p className="text-sm text-center">{error}</p>
                     </div>
+                    : <div className="bg-white"></div>
                   }
 
                   <div>
@@ -233,7 +270,7 @@ export function NavigationMenu() {
                 
                 <p className="mt-5 text-sm text-center text-gray-500">
                   Already have an account? {" "}
-                  <a onClick={() => setAccountAction("login")} className="link link-hover font-semibold leading-6 text-pink-600 hover:text-pink-500">Create account</a>
+                  <a onClick={() => setAccountAction("login")} className="link link-hover font-semibold leading-6 text-pink-600 hover:text-pink-500">Log in</a>
                 </p> 
               </div>
             ) : (
