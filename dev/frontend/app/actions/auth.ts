@@ -37,11 +37,11 @@ export async function login(username: string, password: string) {
     });
 
     const result = await response.json();
-    const userId = result.result['user_id'];
-    const name = result.result['username'];
+    const user = result.result;
     
     const expires = new Date(Date.now() + 3600000);
-    const session = await encrypt({ name, userId, expires });
+    
+    const session = await encrypt({ user, expires });
     cookies().set('session', session, {expires, httpOnly: true });
 
     return result;
@@ -60,6 +60,26 @@ export async function getSession() {
   return await decrypt(session);
 }
 
+export async function editSession(updatedUser: any) {
+  try {
+    const session = cookies().get("session")?.value;
+    if (!session) {
+      return { success: false, message: "No session found"};
+    } 
+
+    const user = updatedUser;
+
+    const expires = new Date(Date.now() + 3600000);
+  
+    const newSession = await encrypt({user, expires});
+    cookies().set('session', newSession, {expires, httpOnly: true });
+
+    return { success: true, message: 'Session updated successfully.'}
+  } catch (error) {
+    return { success: false, message: "Error: failed to update session"}
+  }
+} 
+
 export async function updateSession(request: NextRequest) {
   const session = request.cookies.get("session")?.value;
   if (!session) return;
@@ -77,9 +97,10 @@ export async function updateSession(request: NextRequest) {
   return res;
 }
 
-export async function signup(username: String, email: String, password: String): Promise<{ success: boolean, message: string }> {
+export async function signup(user_type: String, username: String, email: String, password: String): Promise<{ success: boolean, message: string }> {
   try {
     const newUser = {
+      user_type: user_type,
       username: username,
       email: email,
       password: password
@@ -96,7 +117,7 @@ export async function signup(username: String, email: String, password: String):
     const result = response.json();
 
     return result;
-  } catch (error) {
-    return { success: false, message: "Database Error: failed to create new user" };
+  } catch (error: any) {
+    return { success: false, message: "Database error: failed to create user"};
   }
 }

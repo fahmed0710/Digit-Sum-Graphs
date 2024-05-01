@@ -1,15 +1,31 @@
 "use client"
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { NavigationMenu } from "./components/NavigationMenu";
-import { GraphNode } from "./components/GraphNode";
 import exampleImage from "./components/images/example.jpg";
-import solutionImage from "./components/images/solution.jpg"
+import solutionImage from "./components/images/solution.jpg";
+import { getSession } from './actions/auth';
 
 
 export default function Home() {
   const router = useRouter();
   
+  const [session, setSession] = useState(null);
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    async function checkSession() {
+      const retrievedSession = await getSession();
+      if(retrievedSession) {
+        setSession(retrievedSession);
+      } 
+    }
+
+    checkSession();
+  }, []);
+
+
   return(
     <div className="mx-auto min-h-screen md:w-full lg:w-3/5 flex flex-col justify-center items-center overflow-auto">
       <NavigationMenu />

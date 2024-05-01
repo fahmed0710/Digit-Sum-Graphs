@@ -1,5 +1,7 @@
 "use server"
 
+import { editSession } from "./auth";
+
 export async function getUsers() {
   try {
     const response = await fetch("http://127.0.0.1:4000/users", {
@@ -13,6 +15,24 @@ export async function getUsers() {
     return result;
   } catch (error) {
     return { success: false, message: "Database Error: failed to get users" };
+  }
+}
+
+export async function editUser(id: Number, updatedUser: any) {
+  try {
+    const response = await fetch(`http://127.0.0.1:4000/users/edit/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(updatedUser)
+    });
+
+    const result = await response.json();
+
+    return result;
+  } catch (error: any) {
+    return { success: false, message: "Database Error: failed to edit user"};
   }
 }
 

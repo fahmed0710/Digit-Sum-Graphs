@@ -62,7 +62,7 @@ export function NavigationMenu() {
         if (modal instanceof HTMLDialogElement) {
           modal.close();
         }
-      }, 1500);
+      }, 1000);
     } else {
       setLoggedIn(false);
       setLoginLoad(false);
@@ -78,6 +78,9 @@ export function NavigationMenu() {
       setSignupSuccess(false);
       setError("No field can be left blank.")
       return;
+    } else if(username.trim().length <= 1 || email.trim().length <=1) {
+      setSignupSuccess(false);
+      setError("Make sure fields are made up of actual characters.")
     } else if(password.length < 6) {
       setSignupSuccess(false);
       setError("Password must be at least 6 characters long.");
@@ -104,7 +107,7 @@ export function NavigationMenu() {
           if (modal instanceof HTMLDialogElement) {
             modal.close();
           }
-        }, 1500);
+        }, 1000);
       } else {
         console.log(result.message);
       }

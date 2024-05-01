@@ -35,7 +35,8 @@ def execute_query(query, params=None, fetch=True, fetchone=False, fetchall=False
 
     return result
   except Exception as e:
-    return jsonify({'success': False, 'err': str(e)})
+    return None
+  
 
 
 @app.route('/')
