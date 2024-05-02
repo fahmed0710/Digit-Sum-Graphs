@@ -1,15 +1,20 @@
 "use client"
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { logout, getSession, editSession } from "@/app/actions/auth";
-import { editUser, deleteUser } from "@/app/actions/users";
+import { getUsers, editUser, deleteUser } from "@/app/actions/users";
 import { NavigationMenu } from "@/app/components/NavigationMenu";
 import { setTimeout } from "timers";
 
-export default function Dashboard() {
+interface User {
+  user_id: number;
+  username: string;
+  email: string;
+}
+
+export default function AdminDashboard() {
   const router = useRouter();
 
-  const [sessionCheck, setSessionCheck] = useState(false);
   const [session, setSession] = useState(null);
   const [id, setId] = useState(0);
   const [username, setUsername] = useState("");
@@ -29,17 +34,21 @@ export default function Dashboard() {
 
   const [deleteSuccess, setDeleteSuccess] = useState<boolean | null>(null);
 
-  // check session dependency
+  const [users, setUsers] = useState<User[]>([]);
+  const [editingUser, setEditingUser] = useState(false);
+  const [editingUserId, setEditingUserId] = useState(0);
+
   useEffect(() => {
     async function checkSession() {
       const retrievedSession = await getSession();
+      
       if(retrievedSession) {
-        if(retrievedSession.user.user_type !== "user") {
+        if(retrievedSession.user.user_type !== "admin") {
           setSession(null);
           router.push("/");
         } else {
           setSession(retrievedSession);
-        
+
           setId(retrievedSession.user.user_id);
           setUsername(retrievedSession.user.username);
           setEmail(retrievedSession.user.email);
@@ -49,18 +58,34 @@ export default function Dashboard() {
         router.push("/");
       }
     }
+    
+    async function fetchUsers() {
+      const result = await getUsers();
+      
+      if(result?.success) {
+        setUsers(result.users);
+      } 
+    }
 
-    checkSession();
+    fetchUsers();
+    checkSession()
   }, []);
 
   if(!session) {
     return null;
   }
 
-  function showModal (modalName: string) {
+  function showModal (modalName: string, userId?: number) {
     const modal = document.getElementById(modalName);
-    if (modal instanceof HTMLDialogElement) {
+    if(modal instanceof HTMLDialogElement) {
       modal.showModal();
+    }
+
+    if(userId) {
+      setEditingUser(true);
+      setEditingUserId(userId);
+    } else {
+      setEditingUser(false);
     }
   }
 
@@ -71,6 +96,8 @@ export default function Dashboard() {
     }
     
     setStateFunction(null);
+
+    setEditingUser(false);
   }
   
   const changeUsername = async () => {
@@ -133,19 +160,20 @@ export default function Dashboard() {
       setNewPasswordSuccess(false);
       setError("Passwords don't match.");
     } else {
-      const result = await editUser(id, {'password': newPassword});
+      const idToEdit = editingUser ? editingUserId : id;
+      const result = await editUser(idToEdit, {'password': newPassword});
 
       if(result.success) {
         setNewPasswordSuccess(true);
 
-        await editSession(result.result);
+        !editingUser && await editSession(result.result);
         
         setTimeout(() => {
           closeModal("changePassword", setNewPasswordSuccess);
         }, 500);
 
         setTimeout(() => {
-          window.location.reload();
+          !editingUser && window.location.reload();
         }, 1000);
       } else {
         setNewPasswordSuccess(false);
@@ -155,14 +183,15 @@ export default function Dashboard() {
   }
 
   const handleDelete = async () => {
-    const result = await deleteUser(id);
+    const idToEdit = editingUser ? editingUserId : id;
+    const result = await deleteUser(idToEdit);
     
     if(result?.success){
       setDeleteSuccess(true);
 
       setTimeout(async () => {
         closeModal("deleteAccount", setDeleteSuccess);
-        await logout();
+        !editingUser && await logout();
       }, 500); 
   
       setTimeout(() => {
@@ -207,15 +236,30 @@ export default function Dashboard() {
         </div> 
       </div>
 
-      <div className="h-auto py-4 flex-col justify-center items-center">
-        <h2 className="font-medium text-lg text-center">Gameplays</h2>
+      <div className="h-auto w-5/6 py-4 flex-col justify-center items-center">
+        <h2 className="font-medium text-lg text-center">Users</h2>
         
         <div className="py-2 grid grid-cols-4 overflow-auto">
-          <p>ID</p>
-          <p>Puzzle #</p>
-          <p>Date</p>
-          <p>Time to Complete</p>
+          <p className="text-center">User ID</p>
+          <p className="text-center">Username</p>
+          <p className="text-center">Edit Password</p>
+          <p className="text-center">Delete User</p>
+        
         </div>
+
+        {users.map((user) => (
+          <div key={user.user_id} className="py-1 grid grid-cols-4">
+            <p className="text-center">{user.user_id}</p>
+            <p className="text-center">{user.username}</p>
+            <div className="flex justify-center items-center">
+              <button onClick={() => {showModal("changePassword", user.user_id)}} className="px-2 py-1 rounded bg-blue-500 hover:bg-blue-400 text-sm text-center text-white">Change</button>
+            </div>
+            <div className="flex justify-center items-center">
+              <button onClick={() => {showModal("deleteAccount", user.user_id)}} className="px-2 py-1 rounded bg-red-500 hover:bg-red-400 text-sm text-center text-white">Delete</button>
+            </div>
+          </div>
+        ))}
+
       </div>
       
       <dialog id="changeUsername" className="modal">
