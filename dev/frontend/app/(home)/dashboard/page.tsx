@@ -1,7 +1,7 @@
 "use client"
 import { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
-import { getSession, editSession } from "@/app/actions/auth";
+import { logout, getSession, editSession } from "@/app/actions/auth";
 import { editUser, deleteUser } from "@/app/actions/users";
 import { NavigationMenu } from "@/app/components/NavigationMenu";
 import { setTimeout } from "timers";
@@ -82,13 +82,14 @@ export default function Dashboard() {
         
         setTimeout(() => {
           closeModal("changeUsername", setNewUsernameSuccess);
-        }, 1000);
+        }, 500);
 
         setTimeout(() => {
           window.location.reload();
-        },300);
+        },1000);
       } else {
-        console.log(result.success, result.message);
+        setNewUsernameSuccess(false);
+        setError(result.message);
       }
     }
   }
@@ -107,13 +108,14 @@ export default function Dashboard() {
         
         setTimeout(() => {
           closeModal("changeEmail", setNewEmailSuccess);
-        }, 1000);
+        }, 500);
 
         setTimeout(() => {
           window.location.reload();
-        },300);
+        },1000);
       } else {
-        console.log(result.success, result.message);
+        setNewEmailSuccess(false);
+        setError(result.message);
       }
     }
   }
@@ -135,13 +137,14 @@ export default function Dashboard() {
         
         setTimeout(() => {
           closeModal("changePassword", setNewPasswordSuccess);
-        }, 1000);
+        }, 500);
 
         setTimeout(() => {
           window.location.reload();
-        }, 300);
+        }, 1000);
       } else {
-        console.log(result.success, result.message);
+        setNewPasswordSuccess(false);
+        setError(result.message);
       }
     }
   }
@@ -150,7 +153,19 @@ export default function Dashboard() {
     const result = await deleteUser(id);
     
     if(result?.success){
-      console.log(result.message);
+      setDeleteSuccess(true);
+
+      setTimeout(async () => {
+        closeModal("deleteAccount", setDeleteSuccess);
+        await logout();
+      }, 500); 
+  
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    } else {
+      setDeleteSuccess(false);
+      setError("Error occurred while trying to delete user.");
     }
   }
 
@@ -213,9 +228,9 @@ export default function Dashboard() {
           <form className="mx-auto w-4/6 h-full py-2 space-y-4 flex flex-col items-center">
             {newUsernameSuccess !== null && newUsernameSuccess
               ?
-              <div className="w-5/6 p-2 flex justify-center items-center rounded-md bg-green-100">
-                <p className="text-sm text-center">Username changed successfully!</p>
-              </div>
+                <div className="w-5/6 p-2 flex justify-center items-center rounded-md bg-green-100">
+                  <p className="text-sm text-center">Username changed successfully!</p>
+                </div>
               : newUsernameSuccess !== null && !newUsernameSuccess
               ?
                 <div className="w-5/6 p-2 flex justify-center items-center rounded-md bg-red-200">
@@ -263,9 +278,9 @@ export default function Dashboard() {
           <form className="mx-auto w-4/6 h-full py-2 space-y-4 flex flex-col items-center">
             {newEmailSuccess !== null && newEmailSuccess
               ?
-              <div className="w-5/6 p-2 flex justify-center items-center rounded-md bg-green-100">
-                <p className="text-sm text-center">Email changed successfully!</p>
-              </div>
+                <div className="w-5/6 p-2 flex justify-center items-center rounded-md bg-green-100">
+                  <p className="text-sm text-center">Email changed successfully!</p>
+                </div>
               : newEmailSuccess !== null && !newEmailSuccess
               ?
                 <div className="w-5/6 p-2 flex justify-center items-center rounded-md bg-red-200">
@@ -314,9 +329,9 @@ export default function Dashboard() {
           <form className="mx-auto w-4/6 h-full py-2 space-y-4 flex flex-col items-center">
             {newPasswordSuccess !== null && newPasswordSuccess
               ?
-              <div className="w-5/6 p-2 flex justify-center items-center rounded-md bg-green-100">
-                <p className="text-sm text-center">Password changed successfully!</p>
-              </div>
+                <div className="w-5/6 p-2 flex justify-center items-center rounded-md bg-green-100">
+                  <p className="text-sm text-center">Password changed successfully!</p>
+                </div>
               : newPasswordSuccess !== null && !newPasswordSuccess
               ?
                 <div className="w-5/6 p-2 flex justify-center items-center rounded-md bg-red-200">
@@ -364,15 +379,29 @@ export default function Dashboard() {
               </svg>
             </button>
           </form>
+          
+          {deleteSuccess !== null && deleteSuccess
+            ?
+              <div className="p-2">
+                <p className="text-sm text-center text-green-500">Account deleted successfully!</p>
+              </div>
+            : deleteSuccess !== null && !deleteSuccess
+            ?
+              <div className="p-2">
+                  <p className="text-sm text-center text-red-500">{error}</p>
+                </div>
+            : 
+              <div>
+                <p className="py-2">
+                  <b>Are you sure you want to delete this account?</b> This account will not be able to be accessed again and any information associated with this account will be deleted permanently.
+                </p>
 
-          <p className="py-2">
-            <b>Are you sure you want to delete this account?</b> This account will not be able to be accessed again and any information associated with this account will be deleted permanently.
-          </p>
-
-          <div className="py-2 flex justify-end gap-2">
-            <button onClick={() => {closeModal("deleteAccount", setDeleteSuccess)}} className="px-2 py-1 rounded bg-gray-500 hover:bg-gray-400 text-white">Cancel</button>
-            <button className="px-2 py-1 rounded bg-red-500 hover:bg-red-400 text-white">Delete account</button>
-          </div>
+                <div className="py-2 flex justify-end gap-2">
+                  <button onClick={() => {closeModal("deleteAccount", setDeleteSuccess)}} className="px-2 py-1 rounded bg-gray-500 hover:bg-gray-400 text-white">Cancel</button>
+                  <button onClick={handleDelete} className="px-2 py-1 rounded bg-red-500 hover:bg-red-400 text-white">Delete account</button>
+                </div>
+              </div>
+            }
         </div>
       </dialog>
     </div>
