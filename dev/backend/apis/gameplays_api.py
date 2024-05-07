@@ -11,6 +11,15 @@ def get_gameplays():
   except Exception as e:
     return jsonify({'success': False, 'message': f'Error: {str(e)}'})
 
+@app.route('/gameplays/get/<int:user_id>', methods=['GET'])
+def get_user_gameplays(user_id):
+  try:
+    gameplays = execute_query("SELECT * FROM Gameplays WHERE user_id = %s", (user_id,), fetchall=True)
+      
+    return jsonify({'success': True, 'message': 'Fetched all gameplays successfully', 'result': gameplays})
+  except Exception as e:
+    return jsonify({'success': False, 'message': f'Error: {str(e)}'})
+
 @app.route('/gameplays/add', methods=['POST'])
 def add_gameplay():
   try:

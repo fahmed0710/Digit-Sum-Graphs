@@ -1,10 +1,18 @@
 "use client"
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
 import { logout, getSession, editSession } from "@/app/actions/auth";
 import { editUser, deleteUser } from "@/app/actions/users";
+import { getGameplaysForUser } from "@/app/actions/gameplays";
 import { NavigationMenu } from "@/app/components/NavigationMenu";
 import { setTimeout } from "timers";
+
+interface Gameplay {
+  gameplay_id: number,
+  puzzle_id: number, 
+  date_completed: string,
+  completion_time: string
+}
 
 export default function Dashboard() {
   const router = useRouter();
@@ -14,6 +22,7 @@ export default function Dashboard() {
   const [id, setId] = useState(0);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [gameplays, setGameplays] = useState<Gameplay[]>([]);
 
   const [error, setError] = useState("");
 
@@ -37,12 +46,17 @@ export default function Dashboard() {
         if(retrievedSession.user.user_type !== "user") {
           setSession(null);
           router.push("/");
-        } else {
-          setSession(retrievedSession);
+        } 
+
+        setSession(retrievedSession);
         
-          setId(retrievedSession.user.user_id);
-          setUsername(retrievedSession.user.username);
-          setEmail(retrievedSession.user.email);
+        setId(retrievedSession.user.user_id);
+        setUsername(retrievedSession.user.username);
+        setEmail(retrievedSession.user.email);
+
+        const gameplays = await getGameplaysForUser(retrievedSession.user.user_id);
+        if(gameplays.success) {
+          setGameplays(gameplays.result);
         }
       } else {
         setSession(null);
@@ -51,7 +65,7 @@ export default function Dashboard() {
     }
 
     checkSession();
-  }, []);
+  }, [router]);
 
   if(!session) {
     return null;
@@ -210,12 +224,25 @@ export default function Dashboard() {
       <div className="h-auto py-4 flex-col justify-center items-center">
         <h2 className="font-medium text-lg text-center">Gameplays</h2>
         
-        <div className="py-2 grid grid-cols-4 overflow-auto">
-          <p>ID</p>
-          <p>Puzzle #</p>
-          <p>Date</p>
-          <p>Time to Complete</p>
-        </div>
+        {gameplays 
+          ?
+            (<div className="py-2 grid grid-cols-4 overflow-auto">
+              <p className="text-center">ID</p>
+              <p className="text-center">Puzzle #</p>
+              <p className="text-center">Date</p>
+              <p className="text-center">Time to Complete</p>
+              
+              {gameplays.map((gameplay) => (
+                <React.Fragment key={gameplay.gameplay_id}>
+                  <p className="text-center">{gameplay.gameplay_id}</p>
+                  <p className="text-center">{gameplay.puzzle_id}</p>
+                  <p className="text-center">{gameplay.date_completed}</p>
+                  <p className="text-center">{gameplay.completion_time}</p>
+                </React.Fragment>
+              ))}
+            </div>)
+          : <div className="py-2 text-md text-center">You have not played any games!</div>
+        }
       </div>
       
       <dialog id="changeUsername" className="modal">
