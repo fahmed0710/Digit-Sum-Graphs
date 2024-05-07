@@ -5,6 +5,8 @@ import { NavigationMenu } from '@/app/components/NavigationMenu';
 import { GraphNode } from "@/app/components/GraphNode"
 import { getSession } from '@/app/actions/auth';
 import { getPuzzle, checkSolution } from '@/app/actions/puzzle';
+import { start } from 'repl';
+import { setInterval } from 'timers/promises';
 
 export default function Graph({ params }: { params: { id: number } }) {
   const id = Number(params.id);
@@ -12,19 +14,57 @@ export default function Graph({ params }: { params: { id: number } }) {
   const router = useRouter();
 
   const [session, setSession] = useState(null);
-  const [username, setUsername] = useState("");
+  const [userId, setUserId] = useState("");
 
+  const [startTime, setStartTime] = useState<Date>(new Date());
+  const [elapsedTime, setElapsedTime] = useState("00:00:00");
+  const [stopTimer, setStopTimer] = useState(false);
+ 
   useEffect(() => {
     async function checkSession() {
       const retrievedSession = await getSession();
       if(retrievedSession) {
         setSession(retrievedSession);
-        setUsername(retrievedSession.name);
+        setUserId(retrievedSession.user_id);
       } 
     }
 
     checkSession();
   }, []);
+
+  function formatElapsedTime (timeInSeconds: number): string {
+    const hours = Math.floor(timeInSeconds / 3600);
+    const minutes = Math.floor((timeInSeconds % 3600) / 60);
+    const seconds = timeInSeconds % 60;
+
+    const formattedHours = String(hours).padStart(2, '0');
+    const formattedMinutes = String(minutes).padStart(2, '0');
+    const formattedSeconds = String(seconds).padStart(2, '0');
+
+    return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`
+  }
+
+  useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
+
+    if (startTime && !stopTimer) {
+      const updateElapsedTime = () => {
+        const now = new Date();
+        const elapsed = Math.floor((now.getTime() - startTime.getTime()) / 1000); // in seconds
+        const elapsedString = formatElapsedTime(elapsed);
+        setElapsedTime(elapsedString);
+        timeout = setTimeout(updateElapsedTime, 1000); // Schedule next update
+      };
+
+      updateElapsedTime();
+    }
+
+    return () => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+    };
+  }, [startTime, stopTimer]);
 
   const [initNode, setInitNode] = useState(0);
   const [initVal, setInitVal] = useState(0);
@@ -100,6 +140,8 @@ export default function Graph({ params }: { params: { id: number } }) {
     let modal;
 
     if (result.success) {
+      setStopTimer(true);
+
       setCorrect(true);
 
       modal = document.getElementById("correctSolution");
@@ -107,7 +149,10 @@ export default function Graph({ params }: { params: { id: number } }) {
         modal.showModal();
       }
     } else {
+      setStopTimer(false); 
+
       setCorrect(false);
+
       setIncorrectNodes(result.result);
 
       modal = document.getElementById("incorrectSolution");
@@ -140,6 +185,7 @@ export default function Graph({ params }: { params: { id: number } }) {
       <h2 className="mx-auto p-4 md:w-4/5 lg:w-2/5 text-md text-center">Given one node with a number in it, fill in the other nodes with positive whole numbers in such a way that the value of each node is the sum of the digits of all the numbers connected to it.</h2>
       
       <div className={`relative mx-auto p-8 md:w-4/5 lg:w-2/5 aspect-square flex-col rounded-xl border border-solid border-black flex justify-center items-center`}>
+        <div className="absolute top-0 p-4">{elapsedTime}</div>
         <div className="grid" style={{  gridTemplateRows: `repeat(${puzzleStrLayers.length}, auto)` }}>
           {puzzleStrLayers.map((layer, layerIndex) => (
             <div key={layerIndex} className="flex justify-center items-center">
@@ -185,7 +231,7 @@ export default function Graph({ params }: { params: { id: number } }) {
             <button className="absolute top-2 right-4">x</button>
           </form>
           <p>
-            <span>Incorrect solution!</span> Make sure each node is the sum of all the digits in the nodes connecting to it.
+            <span className="font-bold">Incorrect solution!</span> Make sure each node is the sum of all the digits in the nodes connecting to it.
           </p>
           <div className="py-2 flex justify-center gap-2">
             <button onClick={() => router.push("/graph")} className="px-2 py-1 rounded bg-pink-500 hover:bg-pink-400 text-white">View all graphs</button>
@@ -200,7 +246,8 @@ export default function Graph({ params }: { params: { id: number } }) {
             <button className="absolute top-2 right-4">x</button>
           </form>
           <p>
-            <b>Correct!</b> Move on to the next game?
+            <span className="font-bold">Correct!</span> Graph completed in <i>{elapsedTime}</i>
+            <br />Move on to the next game?
           </p>  
           <div className="py-2 flex justify-center gap-2">
             <button onClick={() => router.push("/graph")} className="px-2 py-1 rounded bg-pink-500 hover:bg-pink-400 text-white">View all graphs</button>
