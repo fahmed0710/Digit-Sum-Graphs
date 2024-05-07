@@ -64,7 +64,7 @@ export default function AdminDashboard() {
       const result = await getUsers();
       
       if(result?.success) {
-        setUsers(result.users);
+        setUsers(result.result);
       } 
     }
 

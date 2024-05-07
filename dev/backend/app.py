@@ -45,7 +45,7 @@ def home():
         'message': 'Hi hi hiii'
     })
 
-from apis import users_api, puzzles_api
+from apis import users_api, puzzles_api, gameplays_api
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')

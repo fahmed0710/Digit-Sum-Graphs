@@ -8,7 +8,7 @@ def get_users():
     users = execute_query("SELECT * FROM Users", fetchall=True)
       
     if users is not None:
-      return jsonify({'success': True, 'message': 'Fetched all users successfully', 'users': users})
+      return jsonify({'success': True, 'message': 'Fetched all users successfully', 'result': users})
     else:
       return jsonify({'success': False, 'message': 'Failed to fetch users'})
   except Exception as e:
@@ -51,6 +51,8 @@ def add_user():
   except Exception as e:
     return jsonify({'success': False, 'message': f'Error: {str(e)}'})
 
+
+# make sure to delete gameplays where user_id is PK
 @app.route('/users/edit/<int:user_id>', methods=['PUT'])
 def edit_user(user_id):
   try:

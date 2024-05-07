@@ -5,16 +5,15 @@ import { NavigationMenu } from '@/app/components/NavigationMenu';
 import { GraphNode } from "@/app/components/GraphNode"
 import { getSession } from '@/app/actions/auth';
 import { getPuzzle, checkSolution } from '@/app/actions/puzzle';
-import { start } from 'repl';
-import { setInterval } from 'timers/promises';
+import { createGameplay } from '@/app/actions/gameplays';
 
 export default function Graph({ params }: { params: { id: number } }) {
-  const id = Number(params.id);
+  const puzzleId = Number(params.id);
   
   const router = useRouter();
 
   const [session, setSession] = useState(null);
-  const [userId, setUserId] = useState("");
+  const [userId, setUserId] = useState(0);
 
   const [startTime, setStartTime] = useState<Date>(new Date());
   const [elapsedTime, setElapsedTime] = useState("00:00:00");
@@ -25,7 +24,7 @@ export default function Graph({ params }: { params: { id: number } }) {
       const retrievedSession = await getSession();
       if(retrievedSession) {
         setSession(retrievedSession);
-        setUserId(retrievedSession.user_id);
+        setUserId(retrievedSession.user.user_id);
       } 
     }
 
@@ -83,7 +82,7 @@ export default function Graph({ params }: { params: { id: number } }) {
   useEffect(() => {
     async function fetchPuzzle() {
       try {
-        const result = await getPuzzle(id);
+        const result = await getPuzzle(puzzleId);
         if(result?.success) {
           setInitNode(result.result['initial_node']);
           setInitVal(result.result['initial_val']);
@@ -98,7 +97,7 @@ export default function Graph({ params }: { params: { id: number } }) {
     }
 
     fetchPuzzle();
-  }, [id]);
+  }, [puzzleId]);
 
   useEffect(() => {
     handleNodeChange(initNode - 1, initVal);
@@ -112,7 +111,6 @@ export default function Graph({ params }: { params: { id: number } }) {
         setPuzzleStrLayers(splitStr);
       }
     }
-    console.log(puzzleStrLayers);
   }, [puzzleStr]);
 
   const [submissionError, setSubmissionError] = useState(false);
@@ -135,23 +133,29 @@ export default function Graph({ params }: { params: { id: number } }) {
   const [incorrectNodes, setIncorrectNodes] = useState<number[]>([]); 
 
   async function checkNodes() {
-    const result = await checkSolution(id, nodeValues);
+    const result = await checkSolution(puzzleId, nodeValues);
     
     let modal;
 
     if (result.success) {
-      setStopTimer(true);
-
       setCorrect(true);
+
+      setStopTimer(true);
+      if(session) {
+        const result = await createGameplay({'user_id': userId, 'puzzle_id': puzzleId, 'completion_time': elapsedTime});
+        if (result.error) {
+          console.log(result.error);
+        }
+      }
 
       modal = document.getElementById("correctSolution");
       if (modal instanceof HTMLDialogElement) {
         modal.showModal();
       }
     } else {
-      setStopTimer(false); 
-
       setCorrect(false);
+
+      setStopTimer(false);
 
       setIncorrectNodes(result.result);
 
@@ -163,7 +167,6 @@ export default function Graph({ params }: { params: { id: number } }) {
   }
 
   const handleSubmit = () => {
-    console.log(puzzleStrLayers);
     if(isValidSubmission()) {
       setSubmissionError(false);
       checkNodes();
@@ -251,7 +254,7 @@ export default function Graph({ params }: { params: { id: number } }) {
           </p>  
           <div className="py-2 flex justify-center gap-2">
             <button onClick={() => router.push("/graph")} className="px-2 py-1 rounded bg-pink-500 hover:bg-pink-400 text-white">View all graphs</button>
-            <button onClick={() => router.push(`/graph/${id + 1}`)} className="px-2 py-1 rounded bg-pink-500 hover:bg-pink-400 text-white">Yes</button>
+            <button onClick={() => router.push(`/graph/${puzzleId + 1}`)} className="px-2 py-1 rounded bg-pink-500 hover:bg-pink-400 text-white">Yes</button>
             <button onClick={() => router.push("/")} className="px-2 py-1 rounded bg-pink-500 hover:bg-pink-400 text-white">No</button>
           </div>
         </div>
