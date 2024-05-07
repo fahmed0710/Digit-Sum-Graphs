@@ -37,13 +37,16 @@ export async function login(username: string, password: string) {
     });
 
     const result = await response.json();
-    const user = result.result;
-    
-    const expires = new Date(Date.now() + 3600000);
-    
-    const session = await encrypt({ user, expires });
-    cookies().set('session', session, {expires, httpOnly: true });
 
+    if(result.success) {
+      const user = result.result;
+    
+      const expires = new Date(Date.now() + 3600000);
+    
+      const session = await encrypt({ user, expires });
+      cookies().set('session', session, {expires, httpOnly: true });
+    }
+    
     return result;
   } catch (error) {
     return { success: false, message: "Database Error: failed to login user" };

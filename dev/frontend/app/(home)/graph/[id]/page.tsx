@@ -1,11 +1,31 @@
 "use client"
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { NavigationMenu } from '@/app/components/NavigationMenu';
 import { GraphNode } from "@/app/components/GraphNode"
+import { getSession } from '@/app/actions/auth';
 import { getPuzzle, checkSolution } from '@/app/actions/puzzle';
 
 export default function Graph({ params }: { params: { id: number } }) {
   const id = Number(params.id);
   
+  const router = useRouter();
+
+  const [session, setSession] = useState(null);
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    async function checkSession() {
+      const retrievedSession = await getSession();
+      if(retrievedSession) {
+        setSession(retrievedSession);
+        setUsername(retrievedSession.name);
+      } 
+    }
+
+    checkSession();
+  }, []);
+
   const [initNode, setInitNode] = useState(0);
   const [initVal, setInitVal] = useState(0);
   const [numOfNodes, setNumOfNodes] = useState(0);
@@ -38,7 +58,7 @@ export default function Graph({ params }: { params: { id: number } }) {
     }
 
     fetchPuzzle();
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     handleNodeChange(initNode - 1, initVal);
@@ -52,6 +72,7 @@ export default function Graph({ params }: { params: { id: number } }) {
         setPuzzleStrLayers(splitStr);
       }
     }
+    console.log(puzzleStrLayers);
   }, [puzzleStr]);
 
   const [submissionError, setSubmissionError] = useState(false);
@@ -97,6 +118,7 @@ export default function Graph({ params }: { params: { id: number } }) {
   }
 
   const handleSubmit = () => {
+    console.log(puzzleStrLayers);
     if(isValidSubmission()) {
       setSubmissionError(false);
       checkNodes();
@@ -112,21 +134,13 @@ export default function Graph({ params }: { params: { id: number } }) {
 
   return (
     <div className="container mx-auto px-6 py-6 flex-col justify-center items-center overflow-auto">
-      
+      <NavigationMenu />
       <h1 className="font-geoeves text-7xl text-center" style={{ wordSpacing: '-7px' }}>Digit Sum Graphs</h1>
       
-      <h2 className="mx-auto p-4 md:w-4/5 lg:w-2/5 text-md text-center">Given one node with a number in it, fill in the other nodes with positive whole numbers in such a way that each node's number is the sum of the digits of all the numbers connected to it.</h2>
+      <h2 className="mx-auto p-4 md:w-4/5 lg:w-2/5 text-md text-center">Given one node with a number in it, fill in the other nodes with positive whole numbers in such a way that the value of each node is the sum of the digits of all the numbers connected to it.</h2>
       
-      <div className={`relative mx-auto p-8 md:w-4/5 lg:w-2/5 aspect-square flex-col rounded-xl border border-solid border-black flex justify-center items-center ${puzzleStrWidth > 5 ? 'overflow-x-auto' : ''}`}>
-        {/* <div className="absolute top-0 p-4">X/{numOfNodes} nodes filled</div> */}
-
-        {!correct &&
-          <div className="absolute top-0 p-4">
-            <p>Incorrect!</p>
-          </div>
-        }
-
-        <div className={`grid grid-cols-${puzzleStrWidth}`}>
+      <div className={`relative mx-auto p-8 md:w-4/5 lg:w-2/5 aspect-square flex-col rounded-xl border border-solid border-black flex justify-center items-center`}>
+        <div className="grid" style={{  gridTemplateRows: `repeat(${puzzleStrLayers.length}, auto)` }}>
           {puzzleStrLayers.map((layer, layerIndex) => (
             <div key={layerIndex} className="flex justify-center items-center">
               {layer.split('').map((element, elementIndex) => (
@@ -160,30 +174,39 @@ export default function Graph({ params }: { params: { id: number } }) {
             <button className="absolute top-2 right-4">x</button>
           </form>
           <p >
-            <b>Submission error!</b> Check to make sure that a{')'} all nodes are filled out and b{')'} all nodes contain a whole number between 0 and 99!
+            <span>Submission error!</span> Check to make sure that a{")"} all nodes are filled out and b{")"} all nodes contain a whole number between 0 and 99!
           </p>  
         </div>
       </dialog>
 
       <dialog id="incorrectSolution" className="modal">
-        <div className="modal-box border border-solid border-red-500 flex">
+        <div className="modal-box border border-solid border-red-500 flex flex-col">
           <form method="dialog" className="modal-action">
             <button className="absolute top-2 right-4">x</button>
           </form>
-          <p >
-            <b>Incorrect solution!</b> Make sure each node is the sum of all the digits in the nodes connecting to it.
-          </p>  
+          <p>
+            <span>Incorrect solution!</span> Make sure each node is the sum of all the digits in the nodes connecting to it.
+          </p>
+          <div className="py-2 flex justify-center gap-2">
+            <button onClick={() => router.push("/graph")} className="px-2 py-1 rounded bg-pink-500 hover:bg-pink-400 text-white">View all graphs</button>
+            <button onClick={() => router.push("/")} className="px-2 py-1 rounded bg-pink-500 hover:bg-pink-400 text-white">Home</button>
+          </div> 
         </div>
       </dialog>
 
       <dialog id="correctSolution" className="modal">
-        <div className="modal-box border border-solid border-green-500 flex">
+        <div className="modal-box border border-solid border-pink-500 flex flex-col">
           <form method="dialog" className="modal-action">
             <button className="absolute top-2 right-4">x</button>
           </form>
-          <p >
-            <b>Correct solution!</b> Move on to the next game?
+          <p>
+            <b>Correct!</b> Move on to the next game?
           </p>  
+          <div className="py-2 flex justify-center gap-2">
+            <button onClick={() => router.push("/graph")} className="px-2 py-1 rounded bg-pink-500 hover:bg-pink-400 text-white">View all graphs</button>
+            <button onClick={() => router.push(`/graph/${id + 1}`)} className="px-2 py-1 rounded bg-pink-500 hover:bg-pink-400 text-white">Yes</button>
+            <button onClick={() => router.push("/")} className="px-2 py-1 rounded bg-pink-500 hover:bg-pink-400 text-white">No</button>
+          </div>
         </div>
       </dialog>
 

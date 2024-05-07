@@ -8,6 +8,7 @@ import { setTimeout } from "timers";
 
 interface User {
   user_id: number;
+  user_type: string, 
   username: string;
   email: string;
 }
@@ -69,7 +70,7 @@ export default function AdminDashboard() {
 
     fetchUsers();
     checkSession()
-  }, []);
+  }, [router]);
 
   if(!session) {
     return null;
@@ -239,25 +240,30 @@ export default function AdminDashboard() {
       <div className="h-auto w-5/6 py-4 flex-col justify-center items-center">
         <h2 className="font-medium text-lg text-center">Users</h2>
         
-        <div className="py-2 grid grid-cols-4 overflow-auto">
-          <p className="text-center">User ID</p>
-          <p className="text-center">Username</p>
-          <p className="text-center">Edit Password</p>
-          <p className="text-center">Delete User</p>
-        
-        </div>
+        {users.filter(user => user.user_type == "user").length != 0
+          ? 
+            <div className="py-2 grid grid-cols-4 overflow-auto">
+              <p className="text-center">User ID</p>
+              <p className="text-center">Username</p>
+              <p className="text-center">Edit Password</p>
+              <p className="text-center">Delete User</p>
+            </div>
+          : <div className="py-2 text-md text-center">No users to display!</div>
+        }   
 
-        {users.map((user) => (
-          <div key={user.user_id} className="py-1 grid grid-cols-4">
-            <p className="text-center">{user.user_id}</p>
-            <p className="text-center">{user.username}</p>
-            <div className="flex justify-center items-center">
-              <button onClick={() => {showModal("changePassword", user.user_id)}} className="px-2 py-1 rounded bg-blue-500 hover:bg-blue-400 text-sm text-center text-white">Change</button>
+        {users
+          .filter(user => user.user_type == "user")
+          .map((user) => (
+            <div key={user.user_id} className="py-1 grid grid-cols-4">
+              <p className="text-center">{user.user_id}</p>
+              <p className="text-center">{user.username}</p>
+              <div className="flex justify-center items-center">
+                <button onClick={() => {showModal("changePassword", user.user_id)}} className="px-2 py-1 rounded bg-blue-500 hover:bg-blue-400 text-sm text-center text-white">Change</button>
+              </div>
+              <div className="flex justify-center items-center">
+                <button onClick={() => {showModal("deleteAccount", user.user_id)}} className="px-2 py-1 rounded bg-red-500 hover:bg-red-400 text-sm text-center text-white">Delete</button>
+              </div>
             </div>
-            <div className="flex justify-center items-center">
-              <button onClick={() => {showModal("deleteAccount", user.user_id)}} className="px-2 py-1 rounded bg-red-500 hover:bg-red-400 text-sm text-center text-white">Delete</button>
-            </div>
-          </div>
         ))}
 
       </div>
