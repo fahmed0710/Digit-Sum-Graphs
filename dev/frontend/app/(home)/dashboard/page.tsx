@@ -177,7 +177,7 @@ export default function Dashboard() {
 
   const handleDelete = async () => {
     const result = await deleteUser(id);
-    
+    console.log(result);
     if(result?.success){
       setDeleteSuccess(true);
 

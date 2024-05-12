@@ -35,7 +35,7 @@ def execute_query(query, params=None, fetch=True, fetchone=False, fetchall=False
 
     return result
   except Exception as e:
-    return None
+    return str(e)
   
 
 

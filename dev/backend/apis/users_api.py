@@ -98,9 +98,11 @@ def edit_user(user_id):
 @app.route('/users/delete/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
   try: 
-    user = execute_query("SELECT * FROM Users WHERE user_id = %s", (user_id,))
+    user = execute_query("SELECT * FROM Users WHERE user_id = %s", (user_id,), fetchone=True)
 
     if user:
+      execute_query("DELETE FROM Gameplays WHERE user_id = %s", (user_id,), fetch=False)
+      
       execute_query("DELETE FROM Users WHERE user_id = %s", (user_id,), fetch=False)
 
       return jsonify({'success': True, 'message': f'User with ID {user_id} deleted successfully.'})
