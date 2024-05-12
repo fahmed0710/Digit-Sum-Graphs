@@ -220,10 +220,15 @@ export default function Graph({ params }: { params: { id: number } }) {
       <dialog id="submissionError" className="modal">
         <div className="modal-box border border-solid border-red-500 flex">
           <form method="dialog" className="modal-action">
-            <button className="absolute top-2 right-4">x</button>
+            <button className="absolute top-4 right-4">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </form>
+          
           <p >
-            <span>Submission error!</span> Check to make sure that a{")"} all nodes are filled out and b{")"} all nodes contain a whole number between 0 and 99!
+            <span className="font-bold">Submission error!</span> Check to make sure that a{")"} all nodes are filled out and b{")"} all nodes contain a whole number between 0 and 99!
           </p>  
         </div>
       </dialog>
@@ -231,11 +236,17 @@ export default function Graph({ params }: { params: { id: number } }) {
       <dialog id="incorrectSolution" className="modal">
         <div className="modal-box border border-solid border-red-500 flex flex-col">
           <form method="dialog" className="modal-action">
-            <button className="absolute top-2 right-4">x</button>
+            <button className="absolute top-4 right-4">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </form>
+         
           <p>
             <span className="font-bold">Incorrect solution!</span> Make sure each node is the sum of all the digits in the nodes connecting to it.
           </p>
+          
           <div className="py-2 flex justify-center gap-2">
             <button onClick={() => router.push("/graph")} className="px-2 py-1 rounded bg-pink-500 hover:bg-pink-400 text-white">View all graphs</button>
             <button onClick={() => router.push("/")} className="px-2 py-1 rounded bg-pink-500 hover:bg-pink-400 text-white">Home</button>
@@ -246,12 +257,18 @@ export default function Graph({ params }: { params: { id: number } }) {
       <dialog id="correctSolution" className="modal">
         <div className="modal-box border border-solid border-pink-500 flex flex-col">
           <form method="dialog" className="modal-action">
-            <button className="absolute top-2 right-4">x</button>
+            <button className="absolute top-4 right-4">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </form>
+          
           <p>
             <span className="font-bold">Correct!</span> Graph completed in <i>{elapsedTime}</i>
             <br />Move on to the next game?
           </p>  
+          
           <div className="py-2 flex justify-center gap-2">
             <button onClick={() => router.push("/graph")} className="px-2 py-1 rounded bg-pink-500 hover:bg-pink-400 text-white">View all graphs</button>
             <button onClick={() => router.push(`/graph/${puzzleId + 1}`)} className="px-2 py-1 rounded bg-pink-500 hover:bg-pink-400 text-white">Yes</button>

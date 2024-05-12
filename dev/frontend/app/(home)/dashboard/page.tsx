@@ -86,6 +86,13 @@ export default function Dashboard() {
     
     setStateFunction(null);
   }
+
+  function formatDateString(dateString: string) {
+    const dateObj = new Date(dateString);
+    const formattedDate = `${dateObj.getDate()} ${dateObj.toLocaleString('default', { month: 'long' })} ${dateObj.getFullYear()}`;
+  
+    return formattedDate;
+  }
   
   const changeUsername = async () => {
     if(newUsername.trim().length <= 1) {
@@ -101,11 +108,11 @@ export default function Dashboard() {
         
         setTimeout(() => {
           closeModal("changeUsername", setNewUsernameSuccess);
-        }, 500);
+        }, 900);
 
         setTimeout(() => {
           window.location.reload();
-        },1000);
+        },1200);
       } else {
         setNewUsernameSuccess(false);
         setError(result.message);
@@ -127,11 +134,11 @@ export default function Dashboard() {
         
         setTimeout(() => {
           closeModal("changeEmail", setNewEmailSuccess);
-        }, 500);
+        }, 900);
 
         setTimeout(() => {
           window.location.reload();
-        },1000);
+        },1200);
       } else {
         setNewEmailSuccess(false);
         setError(result.message);
@@ -156,11 +163,11 @@ export default function Dashboard() {
         
         setTimeout(() => {
           closeModal("changePassword", setNewPasswordSuccess);
-        }, 500);
+        }, 900);
 
         setTimeout(() => {
           window.location.reload();
-        }, 1000);
+        }, 1200);
       } else {
         setNewPasswordSuccess(false);
         setError(result.message);
@@ -177,11 +184,11 @@ export default function Dashboard() {
       setTimeout(async () => {
         closeModal("deleteAccount", setDeleteSuccess);
         await logout();
-      }, 500); 
+      }, 900); 
   
       setTimeout(() => {
         window.location.reload();
-      }, 1000);
+      }, 1200);
     } else {
       setDeleteSuccess(false);
       setError("Error occurred while trying to delete user.");
@@ -221,23 +228,21 @@ export default function Dashboard() {
         </div> 
       </div>
 
-      <div className="h-auto py-4 flex-col justify-center items-center">
+      <div className="w-5/6 h-auto py-4 flex-col justify-center items-center">
         <h2 className="font-medium text-lg text-center">Gameplays</h2>
         
         {gameplays 
           ?
-            (<div className="py-2 grid grid-cols-4 overflow-auto">
-              <p className="text-center">ID</p>
-              <p className="text-center">Puzzle #</p>
+            (<div className="py-2 grid grid-cols-3 overflow-y-auto">
+              <p className="text-center">Graph #</p>
               <p className="text-center">Date</p>
               <p className="text-center">Time to Complete</p>
               
               {gameplays.map((gameplay) => (
                 <React.Fragment key={gameplay.gameplay_id}>
-                  <p className="text-center">{gameplay.gameplay_id}</p>
-                  <p className="text-center">{gameplay.puzzle_id}</p>
-                  <p className="text-center">{gameplay.date_completed}</p>
-                  <p className="text-center">{gameplay.completion_time}</p>
+                  <p className="py-2 text-center">{gameplay.puzzle_id}</p>
+                  <p className="py-2 text-center">{formatDateString(gameplay.date_completed)}</p>
+                  <p className="py-2 text-center">{gameplay.completion_time}</p>
                 </React.Fragment>
               ))}
             </div>)
@@ -246,7 +251,7 @@ export default function Dashboard() {
       </div>
       
       <dialog id="changeUsername" className="modal">
-        <div className="modal-box border border-solid border-blue-500 flex flex-col">
+        <div className="max-w-sm modal-box border border-solid border-blue-500 flex flex-col">
           <form method="dialog" className="modal-action">
             <button onClick={() => {closeModal("changeUsername", setNewUsernameSuccess)}} className="absolute top-4 right-4">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" stroke="currentColor">
@@ -255,48 +260,47 @@ export default function Dashboard() {
             </button>
           </form>
 
-          <p className="py-2 text-center text-lg font-bold">Change Username</p>
+          <p className="py-1 text-center text-lg font-bold">Change Username</p>
 
           <form className="mx-auto w-4/6 h-full py-2 space-y-4 flex flex-col items-center">
             {newUsernameSuccess !== null && newUsernameSuccess
               ?
-                <div className="w-5/6 p-2 flex justify-center items-center rounded-md bg-green-100">
+                <div className="w-full p-2 flex justify-center items-center rounded-md bg-green-100">
                   <p className="text-sm text-center">Username changed successfully!</p>
                 </div>
               : newUsernameSuccess !== null && !newUsernameSuccess
               ?
-                <div className="w-5/6 p-2 flex justify-center items-center rounded-md bg-red-200">
+                <div className="w-full p-2 flex justify-center items-center rounded-md bg-red-200">
                   <p className="text-sm text-center">{error}</p>
                 </div>
               : <div className="bg-white"></div>
             }
             
-            <div className="grid grid-cols-2 w-5/6">
+            <div className="w-full grid grid-cols-2">
               <label className="text-sm text-left font-medium leading-6">Username</label>
-              <p className="text-sm text-center">{username}</p>
+              <p className="text-sm text-right">{username}</p>
             </div>
 
-            <div>
+            <div className="w-full">
               <label className="text-sm font-medium leading-6">New Username</label>
-              <label className="input input-bordered flex items-center gap-2">
+              <div className="input input-bordered flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 opacity-70">
                   <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
                 </svg>
-                <input required type="text" placeholder="Username" className="text-sm leading-6"
+                <input required type="text" placeholder="Username" className="text-sm leading-6 w-full"
                   onChange={(e) => {setNewUsername(e.target.value)} }/>
-              </label>
+                </div>
             </div>
           </form>
 
-          <div className="py-2 flex justify-end gap-2">
-            <button onClick={() => {closeModal("changeUsername", setNewUsernameSuccess)}} className="px-2 py-1 rounded bg-gray-500 hover:bg-gray-400 text-white">Cancel</button>
-            <button onClick={changeUsername} className="px-2 py-1 rounded bg-blue-500 hover:bg-blue-400 text-white">Change username</button>
+          <div className="py-2 flex justify-center gap-2">
+            <button onClick={changeUsername} className="w-4/6 py-1 rounded bg-blue-500 hover:bg-blue-400 text-white">Change username</button>
           </div>
         </div>
       </dialog>
 
       <dialog id="changeEmail" className="modal">
-        <div className="modal-box border border-solid border-blue-500 flex flex-col">
+        <div className="max-w-sm modal-box border border-solid border-blue-500 flex flex-col">
           <form method="dialog" className="modal-action">
             <button onClick={() => {closeModal("changeEmail", setNewEmailSuccess)}} className="absolute top-4 right-4">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" stroke="currentColor">
@@ -305,49 +309,48 @@ export default function Dashboard() {
             </button>
           </form>
 
-          <p className="py-2 text-center text-lg font-bold">Change Email</p>
+          <p className="py-1 text-center text-lg font-bold">Change Email</p>
 
-          <form className="mx-auto w-4/6 h-full py-2 space-y-4 flex flex-col items-center">
+          <form className="mx-auto w-4/6 py-2 space-y-4 flex flex-col items-center">
             {newEmailSuccess !== null && newEmailSuccess
               ?
-                <div className="w-5/6 p-2 flex justify-center items-center rounded-md bg-green-100">
+                <div className="w-full p-2 flex justify-center items-center rounded-md bg-green-100">
                   <p className="text-sm text-center">Email changed successfully!</p>
                 </div>
               : newEmailSuccess !== null && !newEmailSuccess
               ?
-                <div className="w-5/6 p-2 flex justify-center items-center rounded-md bg-red-200">
+                <div className="w-full p-2 flex justify-center items-center rounded-md bg-red-200">
                   <p className="text-sm text-center">{error}</p>
                 </div>
               : <div className="bg-white"></div>
             }
 
-            <div className="grid grid-cols-2 w-5/6">
+            <div className="grid grid-cols-2">
               <label className="text-sm text-left font-medium leading-6">Email</label>
-              <p className="text-sm text-center">{email}</p>
+              <p className="text-sm text-right">{email}</p>
             </div>
 
-            <div>
+            <div className="w-full">
               <label className="text-sm font-medium leading-6">New Email</label>
-              <label className="input input-bordered flex items-center gap-2">
+              <div className="input input-bordered flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 opacity-70">
                   <path d="M2.5 3A1.5 1.5 0 0 0 1 4.5v.793c.026.009.051.02.076.032L7.674 8.51c.206.1.446.1.652 0l6.598-3.185A.755.755 0 0 1 15 5.293V4.5A1.5 1.5 0 0 0 13.5 3h-11Z" />
                   <path d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z" />
                 </svg>
-                <input required type="text" placeholder="Email" className="text-sm leading-6"
-                  onChange={(e) => {setNewEmail(e.target.value)}}    />
-              </label>
+                <input required type="text" placeholder="Email" className="text-sm leading-6 w-full"
+                  onChange={(e) => {setNewEmail(e.target.value)} }/>
+              </div>
             </div>
           </form>
 
-          <div className="py-2 flex justify-end gap-2">
-            <button onClick={() => {closeModal("changeEmail", setNewEmailSuccess)}} className="px-2 py-1 rounded bg-gray-500 hover:bg-gray-400 text-white">Cancel</button>
-            <button onClick={changeEmail} className="px-2 py-1 rounded bg-blue-500 hover:bg-blue-400 text-white">Change email</button>
+          <div className="py-2 flex justify-center gap-2">
+            <button onClick={changeEmail} className="w-4/6 py-1 rounded bg-blue-500 hover:bg-blue-400 text-white">Change email</button>
           </div>
         </div>
       </dialog>
 
       <dialog id="changePassword" className="modal">
-        <div className="modal-box border border-solid border-blue-500 flex flex-col">
+        <div className="max-w-sm modal-box border border-solid border-blue-500 flex flex-col">
           <form method="dialog" className="modal-action">
             <button onClick={() => {closeModal("changePassword", setNewPasswordSuccess)}} className="absolute top-4 right-4">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" stroke="currentColor">
@@ -356,48 +359,47 @@ export default function Dashboard() {
             </button>
           </form>
 
-          <p className="py-2 text-center text-lg font-bold">Change Password</p>
+          <p className="py-1 text-center text-lg font-bold">Change Password</p>
 
           <form className="mx-auto w-4/6 h-full py-2 space-y-4 flex flex-col items-center">
             {newPasswordSuccess !== null && newPasswordSuccess
               ?
-                <div className="w-5/6 p-2 flex justify-center items-center rounded-md bg-green-100">
+                <div className="w-full p-2 flex justify-center items-center rounded-md bg-green-100">
                   <p className="text-sm text-center">Password changed successfully!</p>
                 </div>
               : newPasswordSuccess !== null && !newPasswordSuccess
               ?
-                <div className="w-5/6 p-2 flex justify-center items-center rounded-md bg-red-200">
+                <div className="w-full p-2 flex justify-center items-center rounded-md bg-red-200">
                   <p className="text-sm text-center">{error}</p>
                 </div>
               : <div className="bg-white"></div>
             }
 
-            <div>
+            <div className="w-full">
               <label className="text-sm font-medium leading-6">New Password</label>
-              <label className="input input-bordered flex items-center gap-2">
+              <div className="input input-bordered flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 opacity-70">
                   <path fillRule="evenodd" d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z" clipRule="evenodd" />
                 </svg>
-                <input required type="password" placeholder="********" className="text-sm leading-6"
-                  onChange={(e) => setNewPassword(e.target.value)}/>
-              </label>
+                <input required type="password" placeholder="********" className="text-sm leading-6 w-full"
+                  onChange={(e) => {setNewPassword(e.target.value)} }/>
+              </div>
             </div>
 
-            <div>
+            <div className="w-full">
               <label className="text-sm font-medium leading-6">Confirm New Password</label>
-              <label className="input input-bordered flex items-center gap-2">
+              <div className="input input-bordered flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 opacity-70">
                   <path fillRule="evenodd" d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z" clipRule="evenodd" />
                 </svg>
-                <input required type="password" placeholder="********" className="text-sm leading-6"
-                  onChange={(e) => setNewConfirmPassword(e.target.value)}/>
-              </label>
+                <input required type="password" placeholder="********" className="text-sm leading-6 w-full"
+                  onChange={(e) => {setNewConfirmPassword(e.target.value)} }/>
+              </div>
             </div>
           </form>
 
-          <div className="py-2 flex justify-end gap-2">
-            <button onClick={() => {closeModal("changePassword", setNewPasswordSuccess)}} className="px-2 py-1 rounded bg-gray-500 hover:bg-gray-400 text-white">Cancel</button>
-            <button onClick={changePassword} className="px-2 py-1 rounded bg-blue-500 hover:bg-blue-400 text-white">Change password</button>
+          <div className="py-2 flex justify-center gap-2">
+            <button onClick={changePassword} className="w-4/6 py-1 rounded bg-blue-500 hover:bg-blue-400 text-white">Change password</button>
           </div>
         </div>
       </dialog>

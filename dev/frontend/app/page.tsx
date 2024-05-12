@@ -21,7 +21,6 @@ export default function Home() {
         setSession(retrievedSession);
       } 
     }
-
     checkSession();
   }, []);
 
@@ -38,7 +37,7 @@ export default function Home() {
         
         <div className="mx-auto md:w-full lg:w-3/5 row-span-2 grid grid-cols-3">
           <div className="col-span-3 px-8 py-4 flex flex-col justify-center items-center">
-            <p className="text-lg text-center leading-loose">In each diagram, fill in the circles with positive whole numbers in such a way that each circle's number is the sum of the digits of all the numbers connected to it.</p>
+            <p className="text-lg text-center leading-loose">In each diagram, fill in the circles with positive whole numbers in such a way that the value of each circle is the sum of the digits of all the numbers connected to it.</p>
           </div>
           
           <div className="flex flex-col justify-center items-center">
@@ -54,9 +53,9 @@ export default function Home() {
           <div className="flex flex-col justify-center items-center">
             <p className="text-md leading-6">
               The solution works because:
-              <br/>{"\nCircle 1, 5: 15 = (2 + 1) + (1 + 8) + (2 + 1)"}
-              <br/>{"\nCircle 2, 4: 21 = (1 + 5) + (1 + 8) + (1 + 5)"}
-              <br/>{"\nCircle 3: 18 = (1 + 5) + (2 + 1) + (1 + 5) + (2 + 1)"}
+              {"\nCircle 1, 5: 15 = (2 + 1) + (1 + 8) + (2 + 1)"}
+              {"\nCircle 2, 4: 21 = (1 + 5) + (1 + 8) + (1 + 5)"}
+              {"\nCircle 3: 18 = (1 + 5) + (2 + 1) + (1 + 5) + (2 + 1)"}
             </p>
           </div>
         </div>

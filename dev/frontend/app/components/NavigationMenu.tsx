@@ -41,6 +41,11 @@ export function NavigationMenu() {
   useEffect(() => {
     setLoginSuccess(null);
     setSignupSuccess(null);
+
+    setUsername("");
+    setPassword(""); 
+    setEmail("");
+    setConfirmPassword(""); 
   }, [accountAction])
 
   function handleClick(route: string) {
@@ -137,12 +142,17 @@ export function NavigationMenu() {
     setTimeout(() => {
       window.location.reload();
     }, 500);
-  }
+  };
 
   const handleCloseModal = () => {
     setLoginSuccess(null);
     setSignupSuccess(null);
-  }
+
+    setUsername(""); 
+    setPassword(""); 
+    setEmail(""); 
+    setConfirmPassword(""); 
+  };
 
   const handleDashboardRouting = () => {
     if(userType == "admin") {
@@ -156,12 +166,16 @@ export function NavigationMenu() {
     <div className="navbar">
       <div className="absolute top-4 right-4 px-2 flex flex-1 justify-end">
         <div className="dropdown dropdown-end">
-          <div tabIndex={0} role="button" className="btn btn-ghost">Menu</div>
-          <ul tabIndex={0} className="menu dropdown-content text-end z-[1] p-2 shadow bg-base-100 rounded-box w-min">
-            <li><a onClick={() => router.push("/")}>Home</a></li>
-            <li>{loggedIn ? <a onClick={ handleDashboardRouting }>Dashboard</a> : <a onClick={() => {handleClick("account"); setAccountAction("login")}}>Login</a>}</li>
-            <li><a onClick={() => router.push("/graph")}>Game</a></li>
-            {loggedIn && <li><a onClick={ handleLogout }>Log out</a></li>}
+          <div tabIndex={0} role="button" className="btn btn-ghost">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" stroke="currentColor">
+              <path fill="#000000" fillRule="evenodd" d="M19 4a1 1 0 01-1 1H2a1 1 0 010-2h16a1 1 0 011 1zm0 6a1 1 0 01-1 1H2a1 1 0 110-2h16a1 1 0 011 1zm-1 7a1 1 0 100-2H2a1 1 0 100 2h16z"/>
+            </svg>
+          </div>
+          <ul tabIndex={0} className="menu ietms-end dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-min">
+            <li className="items-end"><a onClick={() => router.push("/")}>Home</a></li>
+            <li className="items-end">{loggedIn ? <a onClick={ handleDashboardRouting }>Dashboard</a> : <a onClick={() => {handleClick("account"); setAccountAction("login")}}>Login</a>}</li>
+            <li className="items-end"><a onClick={() => router.push("/graph")}>Game</a></li>
+            {loggedIn && <li className="items-end"><a onClick={ handleLogout }>Log out</a></li>}
           </ul>
         </div>
       </div>
@@ -201,7 +215,7 @@ export function NavigationMenu() {
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 opacity-70">
                         <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
                       </svg>
-                      <input required name="usernameInput" type="text" placeholder="Username" className="text-sm leading-6"
+                      <input required name="usernameInput" type="text" value={username} placeholder="Username" className="text-sm leading-6"
                         onChange={(e) => { setUsername(e.target.value); }}/>
                     </label>
                   </div>
@@ -212,7 +226,7 @@ export function NavigationMenu() {
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 opacity-70">
                         <path fillRule="evenodd" d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z" clipRule="evenodd" />
                       </svg>
-                      <input required name="passwordInput" type="password" placeholder="********" className="text-sm leading-6" 
+                      <input required type="password" value={password}  placeholder="********" className="text-sm leading-6" 
                         onChange={(e) => { setPassword(e.target.value); }}/>
                     </label>
                   </div>
@@ -251,7 +265,7 @@ export function NavigationMenu() {
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 opacity-70">
                         <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
                       </svg>
-                      <input required name="usernameInput" type="text" placeholder="Username" className="text-sm leading-6"
+                      <input required name="usernameInput" type="text" value={username} placeholder="Username" className="text-sm leading-6"
                         onChange={(e) => { setUsername(e.target.value); }}/>
                     </label>
                   </div>
@@ -263,7 +277,7 @@ export function NavigationMenu() {
                         <path d="M2.5 3A1.5 1.5 0 0 0 1 4.5v.793c.026.009.051.02.076.032L7.674 8.51c.206.1.446.1.652 0l6.598-3.185A.755.755 0 0 1 15 5.293V4.5A1.5 1.5 0 0 0 13.5 3h-11Z" />
                         <path d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z" />
                       </svg>
-                      <input required name="emailInput" type="text" placeholder="Email" className="text-sm leading-6"
+                      <input required name="emailInput" type="text" value={email} placeholder="Email" className="text-sm leading-6"
                         onChange={(e) => { setEmail(e.target.value); }}/>
                     </label>
                   </div>
@@ -274,7 +288,7 @@ export function NavigationMenu() {
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 opacity-70">
                         <path fillRule="evenodd" d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z" clipRule="evenodd" />
                       </svg>
-                      <input required name="passwordInput" type="password" placeholder="********" className="text-sm leading-6" 
+                      <input required name="passwordInput" type="password" value={password} placeholder="********" className="text-sm leading-6" 
                         onChange={(e) => { setPassword(e.target.value); }}/>
                     </label>
                   </div>
@@ -285,7 +299,7 @@ export function NavigationMenu() {
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 opacity-70">
                         <path fillRule="evenodd" d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z" clipRule="evenodd" />
                       </svg>
-                      <input required name="confirmPasswordInput" type="password" placeholder="********" className="text-sm leading-6" 
+                      <input required name="confirmPasswordInput" type="password" value={confirmPassword} placeholder="********" className="text-sm leading-6" 
                         onChange={(e) => { setConfirmPassword(e.target.value); }}/>
                     </label>
                   </div>
