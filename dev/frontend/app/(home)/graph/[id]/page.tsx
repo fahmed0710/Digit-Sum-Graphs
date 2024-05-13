@@ -267,7 +267,7 @@ export default function Graph({ params }: { params: { id: number } }) {
           </form>
           
           <p >
-            <span className="font-bold">Submission error!</span> Check to make sure that a{")"} all nodes are filled out and b{")"} all nodes contain a whole number between 0 and 99!
+            <span className="font-bold">Submission error!</span> Check to make sure that a{")"} all nodes are filled out and b{")"} all nodes contain a whole number between 1 and 99!
           </p>  
         </div>
       </dialog>
@@ -309,9 +309,9 @@ export default function Graph({ params }: { params: { id: number } }) {
           </p>  
           
           <div className="py-2 flex justify-center gap-2">
-            <button onClick={() => router.push("/graph")} className="px-2 py-1 rounded bg-pink-500 hover:bg-pink-400 text-white">View all graphs</button>
             <button onClick={() => router.push(`/graph/${puzzleId + 1}`)} className="px-2 py-1 rounded bg-pink-500 hover:bg-pink-400 text-white">Yes</button>
             <button onClick={() => router.push("/")} className="px-2 py-1 rounded bg-pink-500 hover:bg-pink-400 text-white">No</button>
+            <button onClick={() => router.push("/graph")} className="px-2 py-1 rounded bg-pink-500 hover:bg-pink-400 text-white">View all graphs</button>
           </div>
         </div>
       </dialog>

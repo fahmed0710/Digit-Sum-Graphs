@@ -50,12 +50,12 @@ export default function Home() {
             <Image className="max-h-full w-auto" src={solutionImage} alt="Example" />
           </div>
 
-          <div className="flex flex-col justify-center items-center">
+          <div className="px-2 flex flex-col justify-center items-center">
             <p className="text-md leading-6">
               The solution works because:
-              {"\nCircle 1, 5: 15 = (2 + 1) + (1 + 8) + (2 + 1)"}
-              {"\nCircle 2, 4: 21 = (1 + 5) + (1 + 8) + (1 + 5)"}
-              {"\nCircle 3: 18 = (1 + 5) + (2 + 1) + (1 + 5) + (2 + 1)"}
+              <br />{"-Circle 1, 5: 15 = (2 + 1) + (1 + 8) + (2 + 1)"}
+              <br /> {"-Circle 2, 4: 21 = (1 + 5) + (1 + 8) + (1 + 5)"}
+              <br /> {"-Circle 3: 18 = (1 + 5) + (2 + 1) + (1 + 5) + (2 + 1)"}
             </p>
           </div>
         </div>

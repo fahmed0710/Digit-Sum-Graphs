@@ -202,7 +202,7 @@ export default function Dashboard() {
       <h1 className="py-6 font-bold text-xl text-center">Welcome, {username}!</h1>
       
       <div className="w-4/6 py-4 flex-col justify-center items-center">
-        <h2 className="font-medium text-lg text-center">Settings</h2>
+        <h2 className="font-medium text-lg text-center">Account Settings</h2>
           
         
         <div className="py-1 grid grid-cols-3">
@@ -231,7 +231,7 @@ export default function Dashboard() {
       <div className="w-5/6 h-auto py-4 flex-col justify-center items-center">
         <h2 className="font-medium text-lg text-center">Gameplays</h2>
         
-        {gameplays 
+        {gameplays.length != 0 
           ?
             (<div className="py-2 grid grid-cols-3 overflow-y-auto">
               <p className="text-center">Graph #</p>

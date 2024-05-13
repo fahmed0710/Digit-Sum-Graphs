@@ -31,7 +31,7 @@ export default function GraphMenu() {
       <h1 className="font-geoeves text-7xl text-center" style={{ wordSpacing: '-7px' }}>Digit Sum Graphs</h1>
       <p className="text-center">Click on a link to access a graph puzzle!</p>
       
-      <div className="mx-auto p-8 md:w-4/5 lg:w-2/5 grid grid-cols-6">
+      <div className="mx-auto p-8 md:w-4/5 lg:w-2/5 grid grid-cols-5">
         {puzzleIds.map((puzzleId, puzzleIdIndex) => (
           <div 
             key={puzzleIdIndex}
