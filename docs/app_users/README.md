@@ -3,6 +3,9 @@
 ## Home Screen
 When users land on the site, they’ll be greeted by the home screen. There is a navigation menu at the top where users have the option to log in or go to a game. There is a description of the game, as well as an example of how to play. Users will have the option to ‘Play Now!’. 
 
+## Navigation Menu
+On each page, users have a navigation menu at the top right corner. From there, they will see links that lead to Home, Login, or Game. If users are logged in, they will also see a Dashboard link, as well as a Logout link.
+
 ## Login Modal
 When users click on the navigation menu and then select ‘Login’, they will be shown the login modal, where they can login to a pre-existing account by providing the correct credentials associated with said account. 
 
