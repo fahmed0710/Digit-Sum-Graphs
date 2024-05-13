@@ -4,14 +4,14 @@ import mysql.connector
 import os
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=['https://digit-sum-graphs.vercel.app', 'http://localhost:3000'])
 
-config={
-  'user': 'root',
-  'password': 'root',
-  'host': 'db',
+config = {
+  'user': 'digitsumgraphs',
+  'password': 'cs161proj',
+  'host': 'digitsumgraphs.mysql.pythonanywhere-services.com',
   'port': '3306',
-  'database': "digit_sum_graphs"
+  'database': 'digitsumgraphs$default'
 }
 
 def execute_query(query, params=None, fetch=True, fetchone=False, fetchall=False):
@@ -37,7 +37,6 @@ def execute_query(query, params=None, fetch=True, fetchone=False, fetchall=False
   except Exception as e:
     return str(e)
   
-
 
 @app.route('/')
 def home():
