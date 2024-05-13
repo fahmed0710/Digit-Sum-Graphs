@@ -2,7 +2,7 @@
 
 export async function createGameplay(gameplay: any) {
   try {
-    const response = await fetch(`http://127.0.0.1:4000/gameplays/add`, {
+    const response = await fetch(`http://digitsumgraphs.pythonanywhere.com/gameplays/add`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -20,7 +20,7 @@ export async function createGameplay(gameplay: any) {
 
 export async function getGameplaysForUser(userId: number) {
   try {
-    const response = await fetch(`http://127.0.0.1:4000/gameplays/get/${userId}`, {
+    const response = await fetch(`http://digitsumgraphs.pythonanywhere.com/gameplays/get/${userId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'

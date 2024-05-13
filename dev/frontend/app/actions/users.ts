@@ -4,7 +4,7 @@ import { editSession } from "./auth";
 
 export async function getUsers() {
   try {
-    const response = await fetch("http://127.0.0.1:4000/users", {
+    const response = await fetch("http://digitsumgraphs.pythonanywhere.com/users", {
       method: "GET",
       headers: {
         "Content-Type": "application/json"
@@ -20,7 +20,7 @@ export async function getUsers() {
 
 export async function editUser(id: Number, updatedUser: any) {
   try {
-    const response = await fetch(`http://127.0.0.1:4000/users/edit/${id}`, {
+    const response = await fetch(`http://digitsumgraphs.pythonanywhere.com/users/edit/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -38,7 +38,7 @@ export async function editUser(id: Number, updatedUser: any) {
 
 export async function deleteUser(id: number) {
   try {
-    const response = await fetch(`http://127.0.0.1:4000/users/delete/${id}`, {
+    const response = await fetch(`http://digitsumgraphs.pythonanywhere.com/users/delete/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json"

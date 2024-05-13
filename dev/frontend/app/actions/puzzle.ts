@@ -8,7 +8,7 @@ interface Puzzle {
 
 export async function getPuzzles() {
   try {
-    const response = await fetch("http://127.0.0.1:4000/puzzles", {
+    const response = await fetch("http://digitsumgraphs.pythonanywhere.com/puzzles", {
       method: "GET",
       headers: {
         "Content-Type": "application/json"
@@ -42,7 +42,7 @@ export async function getPuzzleIDs() {
 
 export async function getPuzzle(id: Number) {
   try {
-    const response = await fetch(`http://127.0.0.1:4000/puzzles/get/${id}`, {
+    const response = await fetch(`http://digitsumgraphs.pythonanywhere.com/puzzles/get/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json"
@@ -58,7 +58,7 @@ export async function getPuzzle(id: Number) {
 
 export async function getSolution(id: Number) {
   try {
-    const response = await fetch(`http://127.0.0.1:4000/puzzles/get/solution/${id}`, {
+    const response = await fetch(`http://digitsumgraphs.pythonanywhere.com/puzzles/get/solution/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json"
@@ -78,7 +78,7 @@ export async function checkSolution(id: Number, solution_set: Number[]) {
       solution_set: solution_set
     }
     
-    const response = await fetch(`http://127.0.0.1:4000/puzzles/check/solution/${id}`, {
+    const response = await fetch(`http://digitsumgraphs.pythonanywhere.com/puzzles/check/solution/${id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

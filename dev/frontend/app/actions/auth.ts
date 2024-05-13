@@ -28,7 +28,7 @@ export async function login(username: string, password: string) {
       password: password
     };
     
-    const response = await fetch("http://127.0.0.1:4000/users/login", {
+    const response = await fetch("http://digitsumgraphs.pythonanywhere.com/users/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -109,7 +109,7 @@ export async function signup(user_type: String, username: String, email: String,
       password: password
     }
 
-    const response = await fetch("http://127.0.0.1:4000/users/add", {
+    const response = await fetch("http://digitsumgraphs.pythonanywhere.com/users/add", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
