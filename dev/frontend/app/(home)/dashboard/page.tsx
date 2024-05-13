@@ -180,10 +180,11 @@ export default function Dashboard() {
     console.log(result);
     if(result?.success){
       setDeleteSuccess(true);
+      await logout();
 
       setTimeout(async () => {
         closeModal("deleteAccount", setDeleteSuccess);
-        await logout();
+        
       }, 900); 
   
       setTimeout(() => {
