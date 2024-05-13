@@ -189,10 +189,10 @@ export default function AdminDashboard() {
     
     if(result?.success){
       setDeleteSuccess(true);
+      !editingUser && await logout();
 
       setTimeout(async () => {
         closeModal("deleteAccount", setDeleteSuccess);
-        !editingUser && await logout();
       }, 900); 
   
       setTimeout(() => {
