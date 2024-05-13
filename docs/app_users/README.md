@@ -1,26 +1,35 @@
 # Instructions to Use the App
 
 ## Home Screen
-When the user lands on the site, they will be greeted by the Home Screen. The user will have the option to 'Play as User' or 'Play as Guest'. If the user clicks on 'Play as User', they will be redirected to a login page, where they can also create an account. If the user clicks on 'Play as Guest, they will be redirected to the game straightaway. Admins will also find an admin login link at the top of the page. Users will also be able to view the user leaderboard underneath the play option buttons.
+When users land on the site, they’ll be greeted by the home screen. There is a navigation menu at the top where users have the option to log in or go to a game. There is a description of the game, as well as an example of how to play. Users will have the option to ‘Play Now!’. 
 
-## Login Page
-The user can login to a pre-existing account after providing the correct email address and password associated with said account. There is also a 'forgot password' link at the bottom if the user cannot remember their password.
+## Login Modal
+When users click on the navigation menu and then select ‘Login’, they will be shown the login modal, where they can login to a pre-existing account by providing the correct credentials associated with said account. 
 
-## Signup Page
-The user can create an account on the Sign Up page by entering their first name, last name, email address and password. The password must be 8 characters long and include at least 1 uppercase letter, 1 number, and 1 special character. The pasword must be entered twice and must match. If all the information is inputted correctly, an account will be created for the user.
+## Signup Modal
+When users click on the navigation menu and then select ‘Login’ and then ‘Create an account’ at the bottom of the login modal, they will be shown the signup modal, where they can create an account by inputting a valid username, email, and password.
+
+## Graph Menu Page
+When users click on the navigation menu and then select ‘Game’ (regardless of whether they are logged in or not), users will be redirected to the graph menu page, where they can choose from many possible puzzles.
+
+## Graph Game  
+After selecting a puzzle from the graph menu page, users get redirected to the graph game page. Each puzzle is a diagram of interconnected nodes. Users have to type in positive whole numbers in each node such that each node’s number is the sum of the digits of all the numbers connected to it. Users are also timed on how long they take to correctly complete the puzzle.
+
+If the user finds they cannot solve the puzzle, they can click ‘Get Solution’ and get the solution for the puzzle.
+
+When users are finished filling out all nodes with valid values, they can click ‘Submit Solution’ to see whether they are correct. They will see a message based on whether their solution is correct/incorrect. They will also get options based on the correctness of their solution to continue onto the next game or go back to the menu page or the landing page.
 
 ## User Dashboard
-The user will have a dashboard where they will be able to view their account settings, game history and statistics, and a display of their total points. 
+When users click on the navigation menu while they’re logged in and then select ‘Dashboard’, if they are a user, they will be redirected to the user dashboard, where they can view their account settings and gameplays.
 
 ## Admin Dashboard
-The admin will have a dashboard where they will have the same functionalities found in the User Dashboard, as well as admin features, such as account removal and password resets. 
+When admins click on the navigation menu while they’re logged in and then select ‘Dashboard’, if they are an admin, they will be redirected to their dashboard, where they can view their account settings and their admin features such as user account removal and password reset.
 
-## Account Settings Page
-From the User Dashboard, the user can access the Account Settings page, where they can change their name, email, and/or password thorugh account settings on their user dashboard.
+Admins have the ability to see a list of non-admin users on their dashboard. For each user, admins have the ability to a) change their password and b) permanently delete their account.
 
-## Game 
-From the home screen, the user can play the game by clicking on of the 2 options (mentioned above in the Home Screen section). From there, they will be redirected to the game screen, where they are given a puzzle of interconnected nodes. One node will have a number in it. The user must fill in the other nodes. They will be able to type in positive whole numbers in each node such that each node's number is the sum of the digits of all the numbers connected to it.
+Admin Account credentials:
+-Username: admin
+-Password: password
 
-If the user finds they cannot solve the puzzle, they can press a ‘Get solution button’ and get one of the possible solutions for the puzzle.
-
-After a user completes a level, they will see a screen displaying the points they have earned on this level as well as options to either continue to the next puzzle or to go to the user dashboard.
+## Account Settings
+All users can access the Account Settings through their dashboard, where they can view and change their username, email, and/or password. Users can also delete their account.
