@@ -120,6 +120,19 @@ def delete_puzzle(puzzle_id):
   except Exception as e:
     return jsonify({'success': False, 'message': f'Error: {str(e)}'})
 
+@app.route('/puzzles/get/solution/<int:puzzle_id>', methods=['GET'])
+def get_solution(puzzle_id):
+  try:
+    puzzle = execute_query("SELECT * FROM GraphPuzzles WHERE puzzle_id = %s", (puzzle_id,), fetchone=True)
+    
+    if puzzle:
+      puzzle_solution = puzzle['solution']
+      return jsonify({'success': True, 'message': f'Solution for Puzzle ID {puzzle_id} retrieved successfully.', 'result': puzzle_solution})
+    else:
+      return jsonify({'success': False, 'message': f'Puzzle with ID {puzzle_id} does not exist.'})
+  except Exception as e:
+    return jsonify({'success': False, 'message': f'Error: {str(e)}'})
+
 @app.route('/puzzles/check/solution/<int:puzzle_id>', methods=['POST'])
 def validate_solution(puzzle_id):
   try:

@@ -15,7 +15,8 @@ CREATE TABLE GraphPuzzles(
   initial_node int NOT NULL, 
   initial_val int NOT NULL,
   str_representation VARCHAR(255) NOT NULL,
-  connections JSON
+  connections JSON NOT NULL,
+  solution VARCHAR(255)
 );
 
 CREATE TABLE Gameplays(

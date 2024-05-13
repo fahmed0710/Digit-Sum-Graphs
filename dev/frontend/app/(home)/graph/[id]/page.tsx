@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { NavigationMenu } from '@/app/components/NavigationMenu';
 import { GraphNode } from "@/app/components/GraphNode"
 import { getSession } from '@/app/actions/auth';
-import { getPuzzle, checkSolution } from '@/app/actions/puzzle';
+import { getPuzzle, getSolution, checkSolution } from '@/app/actions/puzzle';
 import { createGameplay } from '@/app/actions/gameplays';
 
 export default function Graph({ params }: { params: { id: number } }) {
@@ -89,7 +89,7 @@ export default function Graph({ params }: { params: { id: number } }) {
           setNumOfNodes(result.result['number_of_nodes'])
           setPuzzleStr(result.result['str_representation']);
         } else {
-          console.log(result.message);
+          router.push("/graph");
         }
       } catch (error) {
         console.log(error);
@@ -127,6 +127,22 @@ export default function Graph({ params }: { params: { id: number } }) {
       } 
     }
     return true;
+  }
+
+  const [generatedSolution, setGeneratedSolution] = useState([]); 
+
+  const handleGetSolution = async () => {
+    const result = await getSolution(puzzleId);
+
+    if(result.success) {
+      const solutionStr = result.result;
+      setGeneratedSolution(solutionStr.match(/\d+|[^0-9\s]| /g));
+    } 
+
+    let modal = document.getElementById("getSolution");
+    if (modal instanceof HTMLDialogElement) {
+      modal.showModal();
+    }
   }
 
   const [correct, setCorrect] = useState(true);
@@ -203,8 +219,8 @@ export default function Graph({ params }: { params: { id: number } }) {
                   {element === ' ' && <div className="w-full"/>}
                   {element === '-' && <div className="w-full h-1 bg-gray-600" />}
                   {element === '|' && <div className="w-1 h-full bg-gray-600" />}
-                  {element === '\\' && <div className="w-1 h-full transform -rotate-45 border-r-2 border-gray-600" />}
-                  {element === '/' && <div className="w-1 h-full transform rotate-45 border-r-2 border-gray-600" />} 
+                  {element === '\\' && <div className="w-1 h-full transform -rotate-45 scale-y-180 border-2 border-gray-600" />}
+                  {element === '/' && <div className="w-1 h-full transform rotate-45 scale-y-180 border-2 border-gray-600" />} 
                 </div>
               ))}
             </div>
@@ -213,9 +229,32 @@ export default function Graph({ params }: { params: { id: number } }) {
       </div>
 
       <div className="mx-auto p-6 flex justify-center items-center">
-        <button className="m-1 px-2 py-2 rounded bg-pink-500 hover:bg-pink-400 text-white">Get Solution</button>
+        <button className="m-1 px-2 py-2 rounded bg-pink-500 hover:bg-pink-400 text-white" onClick={ handleGetSolution }>Get Solution</button>
         <button className="m-1 px-2 py-2 rounded bg-pink-500 hover:bg-pink-400 text-white" onClick={ handleSubmit }>Submit Solution</button>
       </div>
+
+      <dialog id="getSolution" className="modal">
+        <div className="max-w-sm modal-box border border-solid border-pink-500 flex justify-center items-center">
+          <form method="dialog" className="modal-action">
+            <button className="absolute top-4 right-4">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </form>
+          
+          <div>
+            <span className="font-bold">Solution for Graph {puzzleId}</span>
+            <div className="grid" style={{ gridTemplateColumns: `repeat(${puzzleStrWidth}, auto)`, gridTemplateRows: `repeat(${puzzleStrLayers.length}, auto)` }}>
+              {generatedSolution.map((element, idx) => (
+                <div className="flex justify-center items-center" key={idx}>
+                  {element}
+                </div>
+              ))}
+            </div>
+          </div>  
+        </div>
+      </dialog>
 
       <dialog id="submissionError" className="modal">
         <div className="modal-box border border-solid border-red-500 flex">
