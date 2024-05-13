@@ -1,7 +1,6 @@
 # Digit-Sum-Graphs
 
 ## PART A: Project Basics
-**Deployed Link**: [https://digit-sum-graphs.vercel.app/](https://digit-sum-graphs.vercel.app/)
 
 **Full Name**: Fariha Ahmed
 
@@ -13,7 +12,9 @@
 
 
 ## PART B: Github Link
-[Github Repository Link](https://github.com/fahmed0710/Digit-Sum-Graphs)
+**Github Repository Link**: [https://github.com/fahmed0710/Digit-Sum-Graphs](https://github.com/fahmed0710/Digit-Sum-Graphs)
+
+**Deployed Link**: [https://digit-sum-graphs.vercel.app/](https://digit-sum-graphs.vercel.app/)
 
 
 ## PART C: Milestones
